@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Amusement: Python and Netmasks - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Amusement: Python and Netmasks 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    As a network engineer, it's not uncommon for me to need to convert between hex and decimal. While I'm reasonably good at doing this in my head for smaller numbers, when it comes to deciphering stuff like higher TCP or UDP port numbers written in hex, I usually end up using the Python interpreter that's usually open somewhere on my machine. For me, the Python interpreter is the best general purpose calculator app I've found. Using the port number for Flash as an example:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan$ python</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">Python 2.7.2 (v2.7.2:8527427914a2, Jun 11 2011, 15:22:34) </div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">[GCC 4.2.1 (Apple Inc. build 5666) (dot 3)] on darwin</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">Type "help", "copyright", "credits" or "license" for more information.</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">&gt;&gt;&gt; 0x78f</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">1935</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">&gt;&gt;&gt; hex(1935)</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">'0x78f'</div><br />The topic of numeric base conversions often makes my mind drift to every former networking instructor's pet topics, IPv4 subnetting. The other day, I started playing with using the Python interpreter to find network IDs, which is really easy as long as you're using hex:<br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">&gt;&gt;&gt; hex(0x0a0a0a25 &amp; 0xffffffe0)</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">'0xa0a0a20'</div><br />This little snippet finds the bitwise-AND of 10.10.10.37 and 255.255.255.224, which as every up-and-coming CCNA knows is the network ID for that subnet: 10.10.10.32. Back when I was teaching Cisco classes full-time, I used to have a never-ending argument with another instructor about the fact that I didn't teach bitwise operations as part of subnetting: my position was that if all you are doing is solving subnet problems with your squishy human brain, you don't need to learn a bunch of truth tables when there are easier ways to do it in human memory. However, if you're writing code you actually do need to do bitwise operations.<br /><br />Unfortunately most of us (me included) aren't wired for reading IPv4 addresses in hex. So I started wondering how little Python code I could use to calculate network IDs for IPv4 in dotted decimal. A little screwing around and I started wondering if I could fit the entire thing into a Twitter post. Here's what I came up with:<br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">while 1:'.'.join([str(a&amp;m)for a,m in zip([int(n)for n in raw_input('addr?').split('.')],[int(n)for n in raw_input('mask?').split('.')])])</div><br />&nbsp;Try it:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">addr?1.1.1.37</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">mask?255.255.255.224</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">'1.1.1.32'</div><br />Now I realize this bit of code is neither particularly clever nor easy to read, which makes it bad code. But hey, it fits in a single tweet. It works by using one of Python's coolest features, the list comprehension. If we start with the innermost parts, it makes more sense:<br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">[int(n) for n in raw_input('addr?').split('.')]</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">[int(n) for n in raw_input('addr?').split('.')]</div><br />These two sections return lists of integers corresponding to the address and mask the user enters. For example:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">[1,1,1,37]</div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">[255,255,255,224]</div><br />Next, the "zip" function returns a list of tuples that pair corresponding entries in the two lists:<br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">[(1, 255), (1, 255), (1, 255), (37, 224)]</div><br />Next, the outermost list comprehension performs a bitwise-AND of each tuple, returning the octets of our network ID in a new list:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">[1,1,1,32]</div><br />Finally, the "join" method puts them back together into "1.1.1.32", and "while 1:" makes it a loop until you ctrl-c out of it.<br /><br />Working with netmasks in CIDR notation is a bit more complicated, and requires more than one line of code--I'll save that for another post.
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/lessons/2011/12/29/jekyll-introduction" title="Jekyll Introduction">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2012/02/10/cisco-cdr-timestamp-and-ip-address" title="Cisco CDR Timestamp and IP Address Conversion">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>29 January 2012</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

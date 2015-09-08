@@ -1,0 +1,15 @@
+---
+layout: post
+title: predicting reload times on Catalyst 3560/3750
+date: '2009-12-31T08:42:00.005-07:00'
+author: Jay Swan
+tags:
+- catalyst switch
+- IOS upgrade
+- microcode
+modified_time: '2009-12-31T08:54:45.874-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-1282790935584434206
+blogger_orig_url: http://unroutable.blogspot.com/2009/12/predicting-reload-times-on-catalyst.html
+---
+
+During a recent IOS upgrade on a Catalyst 3560, I was connected to the console and noticed that the reload was taking much longer than usual due to some operations by the "Front End Microcode IMG Mgr". The output looked like this:<br /><br /><span><span><pre><span>POST: PortASIC RingLoopback Tests : Begin<br />POST: PortASIC RingLoopback Tests : End, Status Passed<br /><br />front_end/ (directory)<br />extracting front_end/fe_type_1 (34760 bytes)<br />extracting front_end/front_end_ucode_info (86 bytes)<br />extracting front_end/fe_type_2 (73104 bytes)<br />extracting ucode_info (76 bytes)<br /><br />Front-end Microcode IMG MGR: Installed 3 image(s) in cache:<br /><br />Front-end Microcode IMG MGR: found microcode images for 3 devices.<br />Image for front-end 0: flash:/front_end_ucode_cache/ucode.1<br />Image for front-end 7: flash:/front_end_ucode_cache/ucode.1<br />Image for front-end 14: flash:/front_end_ucode_cache/ucode.1<br /><br />Front-end Microcode IMG MGR: Preparing to program device microcode...<br />Front-end Microcode IMG MGR: Preparing to program device[0]...26580 bytes.<br />Front-end Microcode IMG MGR: Programming device 0...rwRrrrrrrwsssspsssspsssspsss<br />spsssspsssspsssspsssspsssspsssspsssspsssspsssspsssspsssspsssspsssspsssspsssspsss<br /></span></pre></span></span>[output truncated]<br /><br />I opened a TAC case to find out what this is, since if you are relying on highly predictable reload times during a maintenance window, this could throw a wrench into your plans.<br /><br />It turns out that the Catalyst switches have a special-purpose microcontroller that rarely needs to be upgraded. When it does need upgrading, however, the upgrade happens as a normal part of a new IOS image load. This upgrade makes the first reload to the new IOS take much longer than usual--I didn't time it, but I would guess 3-4 times longer than normal.<br /><br />Microcontroller upgrades are not typically listed in the image release notes, so the only way to know for sure how long a particular upgrade is going to take is to test it in a lab, using the exact same before/after images that you will use in production.

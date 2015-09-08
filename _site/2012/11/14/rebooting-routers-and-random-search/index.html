@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Rebooting Routers and Random Search Engine Fodder - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Rebooting Routers and Random Search Engine Fodder 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    I frequently tell junior networking folks that rebooting routers without a good reason is a sign of weakness. All too many people who got their start as Windows sysadmins have learned from experience that the way to fix any weird problem is to reboot. In a Windows environment it usually works.<br /><br />In the networking world, that doesn't cut it. One of the defining characteristics of a good network engineer is a belief in a "culture of availability", in which you don't take down services in a haphazard, unplanned fashion just to see what happens. Reboot-just-to-see-what-happens isn't a part of that culture.<br /><br />Unfortunately, software bugs sometimes make reloads necessary, but I prefer to identify them before rebooting. Twice in the last month though, I've run into bugs that required a reboot without much research beforehand. The first one involved a brand-new 2900-series router that needed a reboot before the SRST EULA would show up as accepted: annoying! I opened a TAC case on this one and was advised to try a reboot before anything else; never got a bug ID either.<br /><br />The second one involved an end-of-support voice gateway that I had to shift from MGCP to H.323 during part of a M&amp;A transition. After making the changes, calls coming in on the PRI would connect, then disconnect immediately before matching any dial-peers: everything in <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">debug isdn q931</span> looked normal, yet <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">debug voip ccapi</span> showed nothing. The console would log this message:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">vnm_dsprm_voice_connect: mismatch htsp</div><br />Google was remarkably unhelpful on this, with only a few matches and none that were enlightening. I'm guessing that "vnm" stands for "voice network module", and I know that "htsp" shows up in a lot of voice module debugs, but I don't know much more. The "dsp" part seemed promising, but the gateway had no DSP farm configuration. I'd tried various combinations of "shut/no shut" on the T1 controller, voice port, and D channel with no luck.<br /><br />With nothing else to go on and end-of-support equipment that had been up for about three years, I decided to give in to weakness and try a reload, just to see what would happen. It immediately started working. Bah.<br /><br />So, I'm posting this here so that search engines will find it and other people can try a reload if they run into the same situation.
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2012/10/24/walk-on-wild-side-voip-over-vpn-over" title="Walk on the Wild Side: VoIP over VPN over Internet">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2013/01/11/hello-world-in-bro-ids" title=""Hello World" in Bro IDS">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>14 November 2012</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

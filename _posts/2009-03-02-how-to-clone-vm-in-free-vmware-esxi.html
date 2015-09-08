@@ -1,0 +1,18 @@
+---
+layout: post
+title: how to clone a VM in the free VMWare ESXi
+date: '2009-03-02T22:42:00.000-07:00'
+author: Jay Swan
+tags:
+- clone
+- vmware
+- duplicate
+- ESXi
+- vm
+- virtualization
+modified_time: '2009-03-02T22:54:53.752-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-5889319602722467160
+blogger_orig_url: http://unroutable.blogspot.com/2009/03/how-to-clone-vm-in-free-vmware-esxi.html
+---
+
+In the free verison of ESXi, it's not obvious how to clone a VM, since you don't have VirtualCenter available.<br /><br />I've read about some people using the free version of Converter, but this didn't work for me (Converter keeps hanging partway through the operation). Here's what I did; note that I'm running local storage only on an older host machine:<br /><br />1) From the ESXi console, hit Alt-F1, then type "unsupported". You will get a bunch of dire warnings about this being an unsupported mode. You are now in a bare-bones Unix shell.<br /><br />2) (optional) Enable ssh so you can do the rest remotely: use vi to edit the /etc/inetd.conf file and uncomment the line that starts with "ssh". Exit and restart inetd with "kill -HUP <pid>" where <pid> is the process ID of inetd. You can find the PID with "ps aux | grep inetd".<br /><br />3) cd  /vmfs/volumes/datastore<br /><br />4) Use vmkfstools to clone the .vmdk file:<br /><br /># vmkfstools -i imageA/imageA.vmdk imageB/imageB.vmdk<br />Destination disk format: VMFS thick<br />Cloning disk 'xubu1/xubu1.vmdk'...<br />Clone: 100% done.<br /><br />5) From VI Client, create a new VM and select the custom option. When you get to the "select a hard disk" part, select the VMDK file you just cloned in the previous step.<br /><br />6) You may have trouble with a cloned machine in Windows; you'll need to run sysprep to make it unique. In Linux you can just change the IP (if not using DHCP) and edit /etc/hostname and reboot to make a unique hostname.</pid></pid>

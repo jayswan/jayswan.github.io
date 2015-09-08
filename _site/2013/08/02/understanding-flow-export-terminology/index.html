@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Understanding Flow Export Terminology - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Understanding Flow Export Terminology 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    The variety of terms used to describe network flow export technologies and components can be pretty confusing. Just last year I wrote a post on <a href="http://unroutable.blogspot.com/2012/04/why-netflow-isnt-web-usage-tracker.html" target="_blank">web usage tracking and NetFlow</a> that is already a bit obsolete, so here's an attempt to explain some of the newer terms and capabilities in use today. <br /><br /><b>NetFlow Version 5</b><br />NetFlow v5 is sort of the least common denominator in flow technologies. Almost all vendors and devices that support a flow export technology will do NetFlow v5. Because it's only capable of exporting information about packet fields up to layer 4, however, it's not flexible enough to use for analytics that require information about the application layer. NetFlow v5 tracks only the following data:<br /><ul><li>Source interface</li><li>Source and destination IP address</li><li>Layer 4 protocol</li><li>TCP flags</li><li>Type of Service</li><li>Egress interface</li><li>Packet count</li><li>Byte count</li><li>BGP origin AS</li><li>BGP peer AS</li><li>IP next hop</li><li>Source netmask</li><li>Destination netmask</li></ul><b>Netflow Version 9</b><br />Netflow v9 was Cisco's first attempt at defining an extensible flow export format, defined in <a href="https://www.ietf.org/rfc/rfc3954.txt" target="_blank">RFC 3954</a> back in 2004. It provides a flexible format for building customizable flow export records that contain a wide variety of information types. Many of the goals for flexible flow export were defined in <a href="https://tools.ietf.org/html/rfc3917" target="_blank">RFC 3917</a>:<br /><ul><li>&nbsp;Usage-based accounting</li><li>Traffic profiling</li><li>Traffic engineering</li><li>Attack/Intrusion Detection</li><li>QoS monitoring</li></ul>The RFC defines 79 field types that may be exported in NetFlow v9 packets, and directs the reader to the Cisco website for further field types. The <a href="http://www.cisco.com/en/US/technologies/tk648/tk362/technologies_white_paper09186a00800a3db9.html" target="_blank">latest document I could find</a> there defines 104 field types, several of which are reserved for vendor proprietary use and some of which are reserved for Cisco use.<br /><br /><b>IPFIX</b><br />IPFIX is the IETF standard for extensible flow export. The basic protocol is specified in <a href="https://www.ietf.org/rfc/rfc5101.txt" target="_blank">RFC 5101</a>, but details are included in many other RFCs (Wikipedia has a <a href="https://en.wikipedia.org/wiki/IPFIX#External_links" target="_blank">partial list</a>). IPFIX is based directly on NetFlow v9 and is generally interoperable, but since it's an open standard it is extensible without Cisco involvement. Hundreds of field types are defined in the <a href="https://www.iana.org/assignments/ipfix/ipfix.xhtml" target="_blank">IANA IPFIX documentation</a>.<br /><br /><a href="https://datatracker.ietf.org/doc/rfc6759/?include_text=1" target="_blank">RFC 6759</a> defines an extension of IPFIX to include application-specific information in IPFIX export&nbsp; packets. This allows deep-packet-inspection technologies (such as Cisco's NBAR) to send information about non-standardized, tunneled, or encrypted application layer protocols to IPFIX collectors.<br /><br />IPFIX is being used by various vendors (Plixer, Lancope, and nProbe/nTop come to mind) to export HTTP header data, making it capable of being used as a web usage tracker or web forensics tool with the appropriate collector/analyzer software. <br /><br /><b>Flexible NetFlow</b><br />As far as I can tell, Flexible NetFlow is a marketing term used by Cisco to encompass everything about their approach to configuring and implementing NetFlow v9 and IPFIX.<br /><br /><b>NSEL (NetFlow Security Event Logging)</b><br />NSEL is a proprietary extension of NetFlow v9 to used by Cisco's ASA firewalls to export firewall log data. It's not clear to me why Cisco didn't use IPFIX for this purpose.<br /><br /><b>Cisco AVC (Application Visibility and Control)</b><br />AVC is another Cisco marketing term that encompasses a variety of technologies surrounding the DPI and application-based routing capabilities in its routers, such as IPFIX, NetFlow v9, NBAR, PfR, ART (Application Response Time), and more.<br /><br /><b>Other Vendors</b><br />As mentioned above, most network technology vendors support NetFlow v5 and/or v9. IPFIX support is now becoming very common. Some vendors use proprietary extensions of NetFlow v9; Riverbed's CascadeFlow is one example of this.<br /><br />In a followup post, I'll take a look at some tools that produce flow data without using export technologies.<br /><br />
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2013/05/06/convert-decimal-to-hex-in-ios" title="Convert Hex to Decimal in IOS">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2013/10/16/java-is-to-javascript-as-car-is-to" title="Java is to JavaScript as Car is to Carpet - a Beginner's Guide">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>02 August 2013</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

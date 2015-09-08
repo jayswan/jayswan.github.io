@@ -1,0 +1,13 @@
+---
+layout: post
+title: PyLab with iPython on MacOS X 64-bit
+date: '2012-03-07T21:07:00.000-07:00'
+author: Jay Swan
+tags:
+- pylab ipython python macos lion
+modified_time: '2012-03-07T21:07:47.333-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-5606581729125438854
+blogger_orig_url: http://unroutable.blogspot.com/2012/03/pylab-with-ipython-on-macos-x-64-bit.html
+---
+
+Putting this here for search engine fodder, since it took me a while to figure out...<br /><br />If you try to run the way-cool PyLab feature of iPython on MacOS X with a 64-bit platform (e.g., my iMac running Lion), you get this:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">ImportError: dlopen(/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/numpy/core/multiarray.so, 2): no suitable image found.&nbsp; Did find:</span><br style="font-family: &quot;Courier New&quot;,Courier,monospace;" /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">&nbsp;&nbsp;&nbsp; /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/numpy/core/multiarray.so: no matching architecture in universal wrapper</span><br /><br />What this rather cryptic error means is that the library is 32-bit. To get it to work simply run it with the "arch -i386" command:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">$ arch -i386 ipython --pylab</div><br />The numpy module should now load normally, and PyLab should start.

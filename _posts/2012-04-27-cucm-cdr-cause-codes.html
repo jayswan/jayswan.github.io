@@ -1,0 +1,20 @@
+---
+layout: post
+title: CUCM CDR Cause Codes
+date: '2012-04-27T10:30:00.000-06:00'
+author: Jay Swan
+tags:
+- cause codes
+- cucm
+- callmanager
+- cisco unified communications manager
+- python
+- cdr
+- call detail record
+- call manager
+modified_time: '2012-04-27T10:32:21.658-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-6866219564678767759
+blogger_orig_url: http://unroutable.blogspot.com/2012/04/cucm-cdr-cause-codes.html
+---
+
+Lately I've been doing a fair amount of work with CUCM call detail records. The cause codes are always a pain, since they're listed as numeric codes that correspond to meanings listed only in otherwise obscure documents.<br /><br />To help with this, I created a big list of all the different cause codes used in Cisco Unified Communication Manager call detail records, put them into Python dictionary format, and posted them on Github:<br /><br /><a href="https://github.com/jayswan/cdr/blob/master/causecodes.py">https://github.com/jayswan/cdr/blob/master/causecodes.py</a><br /><br />They should be human readable as-is, and easy enough to convert into hash tables for use in other scripting languages. Hopefully this will save someone from having to pore through the Cisco PDFs that otherwise are the only source for this information. I used the CUCM 6.x documentation when creating it, but it should be quite similar for other versions.<br /><br />One of these days I'll clean up my CDR analysis scripts enough for public consumption.

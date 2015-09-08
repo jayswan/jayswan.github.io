@@ -1,0 +1,16 @@
+---
+layout: post
+title: Weird application interactions
+date: '2008-10-08T16:15:00.001-06:00'
+author: Jay Swan
+tags:
+- VT advantage
+- callmanager
+- media resources
+- unified communications
+modified_time: '2008-10-08T16:26:14.412-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-5855078847267747292
+blogger_orig_url: http://unroutable.blogspot.com/2008/10/blog-post.html
+---
+
+Recently we made some changes to our media resource configuration in CallManager 6.x. Specifically, we stopped using DSPs on a 6608 blade in a Catalyst 6500 and started using DSPs in a couple of 2811 routers. Immediately after this change, a couple of users reported that they could no longer make outbound PSTN calls that transit a particular H.323 gateway. The weirdest part was that if they rebooted their 7940 phone, they could make a single call, but all subsequent calls would fail with a fast busy until they rebooted again. Calls through other gateways worked fine.<br /><br />A ISDN Q.931 debug showed that the second outbound call was setting up as "unrestricted digital" instead of "speech".<br /><br />I went 'round with TAC about this for a few emails and they were getting ready to blame the telco (?!) when I realized that the thing these two users have in common is VT Advantage (a Cisco desktop video-conferencing application). I asked them to turn off VT Advantage, and presto, all calls now worked.<br /><br />Upgrading to the latest VT Advantage version solved the problem completely.<br /><br />Why a change in media resources would affect outbound calling through a single H.323 gateway on users with an old version of VT Advantage is beyond me, but that's my story and I'm sticking to it.

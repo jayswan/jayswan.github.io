@@ -1,0 +1,12 @@
+---
+layout: post
+title: Summarize Router Throughput in Packets/Second
+date: '2011-11-10T09:52:00.001-07:00'
+author: Jay Swan
+tags: 
+modified_time: '2011-11-10T09:52:30.040-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-1890661937424239367
+blogger_orig_url: http://unroutable.blogspot.com/2011/11/summarize-router-throughput-in.html
+---
+
+Here's a quick one-liner to summarize the current packets-per-second throughput on an entire IOS router:<br /><br /><span style="font-size: small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">$ ssh 10.1.2.3 'sh int summ' | awk '/^*/{RXPPS+=$8;TXPPS+=$10} END {print "RXPPS=" RXPPS,"TXPPS=" TXPPS}'</span><br style="font-family: &quot;Courier New&quot;,Courier,monospace;" /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@10.1.2.3's password:</span><br style="font-family: &quot;Courier New&quot;,Courier,monospace;" /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">RXPPS=1613 TXPPS=1539</span></span>

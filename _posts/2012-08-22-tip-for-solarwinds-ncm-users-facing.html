@@ -1,0 +1,13 @@
+---
+layout: post
+title: Tip for Solarwinds NCM Users Facing SmartNet Renewals
+date: '2012-08-22T08:41:00.000-06:00'
+author: Jay Swan
+tags:
+- NMS Smartnet
+modified_time: '2012-08-22T08:41:57.036-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-5936688300368053857
+blogger_orig_url: http://unroutable.blogspot.com/2012/08/tip-for-solarwinds-ncm-users-facing.html
+---
+
+It's time for our annual Cisco SmartNet renewals, which always results in much pain, wailing, and gnashing of teeth. If you use Solarwinds Network Configuration Manager, you already have your serial numbers and hostnames in the database. However, there's no canned report that gives you just those two items without a bunch of extra information. Here's a SQL query that makes it a bit easier by extracting the hostname and serial number of your devices:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;">select nodecaption,chassisid from nodes,cisco_chassis where nodes.nodeid=cisco_chassis.nodeid order by nodecaption asc</div><br />If you paste the results of this into a sheet in Excel, you can then use a VLOOKUP function in Excel to match the serial numbers your Cisco channel partner sends you to the hostnames recorded in NCM. This makes the true-up a lot easier.

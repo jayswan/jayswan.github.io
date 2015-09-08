@@ -1,0 +1,12 @@
+---
+layout: post
+title: Installing netmiko on Windows
+date: '2015-07-15T13:12:00.000-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2015-07-15T13:12:08.406-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-1631339673330999377
+blogger_orig_url: http://unroutable.blogspot.com/2015/07/installing-netmiko-on-windows.html
+---
+
+<a href="https://github.com/ktbyers/netmiko" target="_blank">Netmiko </a>is a Python module by <a href="https://twitter.com/kirkbyers" target="_blank">Kirk Byers</a> that provides a wrapper around the <a href="http://www.paramiko.org/" target="_blank">Paramiko </a>SSH module for doing screen scraping and CLI automation on network devices.<br /><br />Paramiko has some dependencies that make installation on Windows a tad tricky. Here's a quick way to get it done:<br /><br /><ol><li>Install <a href="https://store.continuum.io/cshop/anaconda/" target="_blank">Anaconda</a>.</li><li>From the Anaconda shell, run "conda install paramiko".</li><li>From the Anaconda shell, run "pip install scp".</li><li>Install <a href="https://www.git-scm.com/downloads" target="_blank">git for Windows</a>.</li><li>Clone netmiko with "git clone <a href="https://github.com/ktbyers/netmiko">https://github.com/ktbyers/netmiko</a>"</li><li>cd into the netmiko directory and run "python setup.py install".</li></ol>Done! Screen scrape away, and don't forget to hound your vendors for real APIs... :-)

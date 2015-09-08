@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Building a Ghetto WAN Emulation Network - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Building a Ghetto WAN Emulation Network 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    I wanted a way to do some controlled tests of WAN acceleration products, using a production network. You can buy or rent commercial WAN emulators, but for my purposes it seemed like an improvised solution would suffice. I had a couple of Cisco 2800 routers, a switch, and an ESXi box in my lab that I could press into service, so I built a test network that looks like this:<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-JStKa47N-dY/UWh8j1H8rcI/AAAAAAAAACY/JtoEj0TbpVY/s1600/de-optimizer.jpg" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="141" src="https://lh3.ggpht.com/-JStKa47N-dY/UWh8j1H8rcI/AAAAAAAAACY/JtoEj0TbpVY/s1600/de-optimizer.jpg" width="400" /></a></div><br />R1 acts like the WAN router at a branch site. It has a QoS policy with a "shape average" statement on its "WAN" interface to change the bandwidth to whatever we want to test.<br /><br />R2 simply NATs the test traffic onto an IP address in the production network, since I didn't feel like configuring a new production subnet just for the test.<br /><br />The ESXi box is where the fun part lives: I created two vSwitches and connected one physical NIC to each. I then spun up a simple Ubuntu 12.04 VM with eth0 and eth1 connected to each of the two vSwitches, giving me a separate network connected to each Cisco router. I then enabled routing on the Linux VM and created the appropriate static routes to enable the test and production networks to communicate. Finally, I used the "netem" WAN emulator built into the Linux kernel to inject delay, jitter, and packet loss into the network. Voila -- a network de-optimizer!<br /><br />For testing the WAN accelerators, we'll just install one in the test VLAN and one between the Linux router and R2.<br /><br />Here are the basic steps required to set up the Linux de-optimizer, in case you want to try to build your own:<br /><br />1) Basic Ubuntu 12.04 VM. I used 4GB RAM and 24GB disk, but you could get away with less.<br /><br />2) <b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">sudo apt-get install openssh-server</span></b> Install SSH server so you can still get to the VM from the test network when you break the rest of the test environment. Do this before you break something... ask me how I know. Don't forget to enable SSH on your lab routers too...<br /><br />3)&nbsp; Turn off Network Manager so it doesn't mess with your static addressing and routing config: edit the file <b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">/etc/NetworkManager/NetworkManager.conf</span></b> and change "<b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">managed=false</span></b>" to "<b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">managed=true</span></b>"<br /><br />4) Configure static addressing on your two NICs by editing <span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><b>/etc/network/interfaces</b></span>:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><b>auto eth0<br />iface eth0 inet static<br />&nbsp; address 1.1.1.2<br />&nbsp; netmask 255.255.255.0<br />&nbsp; <br />auto eth1<br />iface eth1 inet static<br />&nbsp; address 2.2.2.2<br />&nbsp; netmask 255.255.255.0</b></span><br /><br />5) Reboot or restart networking.<br /><br />6) Enable IPv4 routing:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><b>sudo sysctl -w net.ipv4.ip_forward=1</b></span><br /><br />7) Configure static routes for the production and test networks:<br /><br /><b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">sudo route add -net 0.0.0.0 netmask 0.0.0.0 gw 2.2.2.2</span></b><br /><b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">sudo route add -net 192.168.222.0 netmask 255.255.255.0 gw 1.1.1.1&nbsp;</span></b><br /><br />In this case 1.1.1.0/24 is the network connecting to R1, 2.2.2.0/24 connects to R2, and 192.168.222.0/24 is the test VLAN.<br /><br />You may also need to delete other routes if they were autoconfigured.<br /><br />8) After testing that everything works, add some latency:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><b><br /></b></span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><b>sudo tc qdisc add dev eth0 root netem delay 50ms 5ms</b></span><br /><br />Do a search for "Linux netem" for a wider array of commands to change delay, jitter, and packet loss.<br /><br />With this setup, the routing configuration and WAN emulation settings will NOT persist after a reboot, so you can always reboot if you screw something up. Start over at step 6.<br /><br /><br /><br />
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2013/03/29/friday-distraction-whos-leaking-24-to" title="Friday Distraction: Who's Leaking >/24 to Global BGP?">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2013/05/06/convert-decimal-to-hex-in-ios" title="Convert Hex to Decimal in IOS">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>12 April 2013</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

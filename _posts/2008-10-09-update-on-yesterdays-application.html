@@ -1,0 +1,12 @@
+---
+layout: post
+title: update on yesterday's application weirdness post
+date: '2008-10-09T08:58:00.000-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2008-10-09T09:03:53.136-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-4082835853713487406
+blogger_orig_url: http://unroutable.blogspot.com/2008/10/update-on-yesterdays-application.html
+---
+
+A friend read my post yesterday on odd problems with H.323 call setup on VT-Advantage-enabled phones after changing media resources configuration. He observed that IOS 12.4(20T), which we're running on the ISRs containing the DSPs, is the first IOS image to fully implement H.320 ISDN video conferencing capability, and that this might have something to do with the problem. The H.323 gateway that's actually handing the call to the PSTN isn't running 12.4(20T); it's running a much older image. Why the code on the DSP farm would affect a call on a different gateway, I don't understand, but it certainly seems like too much correlation to be coincidence.

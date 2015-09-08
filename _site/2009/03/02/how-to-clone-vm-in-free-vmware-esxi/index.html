@@ -1,0 +1,233 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        how to clone a VM in the free VMWare ESXi - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    how to clone a VM in the free VMWare ESXi 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    In the free verison of ESXi, it's not obvious how to clone a VM, since you don't have VirtualCenter available.<br /><br />I've read about some people using the free version of Converter, but this didn't work for me (Converter keeps hanging partway through the operation). Here's what I did; note that I'm running local storage only on an older host machine:<br /><br />1) From the ESXi console, hit Alt-F1, then type "unsupported". You will get a bunch of dire warnings about this being an unsupported mode. You are now in a bare-bones Unix shell.<br /><br />2) (optional) Enable ssh so you can do the rest remotely: use vi to edit the /etc/inetd.conf file and uncomment the line that starts with "ssh". Exit and restart inetd with "kill -HUP <pid>" where <pid> is the process ID of inetd. You can find the PID with "ps aux | grep inetd".<br /><br />3) cd  /vmfs/volumes/datastore<br /><br />4) Use vmkfstools to clone the .vmdk file:<br /><br /># vmkfstools -i imageA/imageA.vmdk imageB/imageB.vmdk<br />Destination disk format: VMFS thick<br />Cloning disk 'xubu1/xubu1.vmdk'...<br />Clone: 100% done.<br /><br />5) From VI Client, create a new VM and select the custom option. When you get to the "select a hard disk" part, select the VMDK file you just cloned in the previous step.<br /><br />6) You may have trouble with a cloned machine in Windows; you'll need to run sysprep to make it unique. In Linux you can just change the IP (if not using DHCP) and edit /etc/hostname and reboot to make a unique hostname.</pid></pid>
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2009/02/28/steps-to-install-bro-ids-on-ubuntu" title="steps to install Bro IDS on Ubuntu">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2009/06/10/open-ports-on-ios-router" title="open ports on IOS router">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>02 March 2009</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+    
+      <section>
+        <h4>Tags</h4>
+        <ul class="tag_box">
+          
+          
+
+
+  
+     
+    	<li><a href="/tags.html#clone-ref">clone <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#vmware-ref">vmware <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#duplicate-ref">duplicate <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#ESXi-ref">ESXi <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#vm-ref">vm <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#virtualization-ref">virtualization <span>1</span></a></li>
+    
+  
+
+
+
+        </ul>
+      </section>
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,15 @@
+---
+layout: post
+title: IP phones show bogus "unknown" status in UCM
+date: '2008-10-17T11:58:00.001-06:00'
+author: Jay Swan
+tags:
+- ucm
+- callmanager
+- unified communications
+modified_time: '2008-10-17T12:00:20.078-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-2913069047941856797
+blogger_orig_url: http://unroutable.blogspot.com/2008/10/ip-phones-show-bogus-unknown-status-in.html
+---
+
+If you end up with a bunch of normally functioning, non-problematic IP phones showing up as "unknown" instead of "registered" in CallManager administration, you can restart the RIS Data Collector service on the publisher to solve the problem. This doesn't affect call processing, but it does seem to restart some media resources like the annunciator, etc.

@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        playing with VLAN-based QoS - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    playing with VLAN-based QoS 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    A friend of mine brought up an interesting question yesterday:<br /><br />Will the "mls qos vlan-based" command mark packets if the packets aren't routed by the SVI where the service policy is applied?<br /><br />I had never even considered this before, so I guessed "no" before reading the docs. Then I set it up in the lab, and the answer (superficially) still seemed to be "no". Then, however, I executed the old RTFM maneuver: the docs made it sound like the answer should be "yes". So I thought I'd have a closer look. Here are the details.<br /><br />The test topology looks like this:<br /><br /><span style="font-weight: bold;">R5---Switch1---Switch2---Cat3750---R6</span><br /><br /><ul><li>R5 &amp; R6 are 2800 series routers.</li><li>Switch1 and Switch2 are 3560s.</li><li>Cat3750, unsurprisingly, is a Catalyst 3750, and the subject of the test.</li></ul><br />All of the inter-switch links are 802.1q trunks, and the two routers are connected to access ports in VLAN 6.<br /><br /><ul><li>R5's interface IP address is 10.6.6.5, with a loopback of 5.5.5.5.</li><li>R6's interface IP address is 10.6.6.6, with a loopback of 6.6.6.6.</li><li>R5 and R6 are running OSPF on all interfaces and are neighbors when the test begins.</li></ul><br />First, I set up a QoS policy on the 3750 that would make packets distinguishable from each other:<br /><br /><span style="font-size:85%;"><span style="font-family:courier new;">ip access-list extended ALL</span><br /><span style="font-family:courier new;"> permit ip any any</span><br /><span style="font-family:courier new;">!</span><br /><span style="font-family:courier new;">class-map match-any FOO</span><br /><span style="font-family:courier new;"> match access-group name ALL</span><br /><span style="font-family:courier new;">!</span><br /><span style="font-family:courier new;">policy-map IN-MARKING</span><br /><span style="font-family:courier new;"> class FOO</span><br /><span style="font-family:courier new;">  set ip dscp cs2</span><br /><span style="font-family:courier new;"> class class-default</span><br /><span style="font-family:courier new;">  set dscp cs1</span></span><br /><br />Then I applied the policy-map to an unrouted SVI for VLAN 6:<br /><br /><span style=";font-family:courier new;font-size:85%;"  >interface Vlan6<br />no ip address<br />service-policy input IN-MARKING</span><br /><br />Then I set R6's access port for VLAN-based QoS:<br /><br /><span style=";font-family:courier new;font-size:85%;"  >interface FastEthernet1/0/2<br />switchport access vlan 6<br />switchport mode access<br />mls qos vlan-based<br />spanning-tree portfast</span><br /><br />Since all traffic should be marked as CS2, the OSPF hello packets being exchanged between R5 and R6 should get marked immediately if the policy is working, but I also generated some ICMP and telnet traffic just for good measure.<br /><br />My superficial, pre-RTFM diagnosis, said it wasn't working:<br /><br /><span style=";font-family:courier new;font-size:85%;"  >c3750#sh policy-map interface<br />Vlan6<br /><br />Service-policy input: IN-MARKING<br /><br />  Class-map: FOO (match-any)<br />    0 packets, 0 bytes<br />    5 minute offered rate 0 bps, drop rate 0 bps<br />    Match: access-group name ALL<br />      0 packets, 0 bytes<br />      5 minute rate 0 bps<br /><br />  Class-map: class-default (match-any)<br />    0 packets, 0 bytes<br />    5 minute offered rate 0 bps, drop rate 0 bps<br />    Match: any<br />      0 packets, 0 bytes<br />      5 minute rate 0 bps</span><br /><br />After my RTFM episode, I started wondering if the packets were getting marked anyway, but not counted by the switch. Idecided to try applying a service policy on R5 that would have rather dramatic effects if the packets were in fact marked:<br /><span style="font-size:85%;"><br /><span style="font-family:courier new;">class-map match-any CM_CS2</span><br /><span style="font-family:courier new;"> match ip dscp cs2</span><br /><span style="font-family:courier new;">!</span><br /><span style="font-family:courier new;">policy-map PM_DROP_CS2</span><br /><span style="font-family:courier new;"> class CM_CS2</span><br /><span style="font-family:courier new;">   drop</span></span><br /><br />then...<br /><span style="font-size:85%;"><br /><span style="font-family:courier new;">R5(config)#int f0/0</span><br /><span style="font-family:courier new;">R5(config-if)#service-policy input PM_DROP_CS2</span><br /><span style="font-family:courier new;">R5(config-if)#</span><br /><span style="font-family:courier new;">R5(config-if)#</span><br /><span style="font-family:courier new;">*Nov 18 15:37:18.097: %OSPF-5-ADJCHG: Process 1, Nbr 20.1.1.6 on FastEthernet0/0 from FULL to DOWN, Neighbor Down: Dead timer expired</span><br /><br /><span style="font-family:courier new;">R5#sh policy-map interface f0/0 input class CM_CS2</span><br /><span style="font-family:courier new;"> FastEthernet0/0</span><br /><br /><span style="font-family:courier new;">  Service-policy input: PM_DROP_CS2</span><br /><br /><span style="font-family:courier new;">    Class-map: CM_CS2 (match-any)</span><br /><span style="font-family:courier new;">      20 packets, 1880 bytes</span><br /><span style="font-family:courier new;">      5 minute offered rate 0 bps, drop rate 0 bps</span><br /><span style="font-family:courier new;">      Match: ip dscp cs2 (16)</span><br /><span style="font-family:courier new;">        20 packets, 1880 bytes</span><br /><span style="font-family:courier new;">        5 minute rate 0 bps</span><br /><span style="font-family:courier new;">      drop</span><br /></span><br />So... in conclusion: the "mls qos vlan-based" command does indeed work for service policies applied to interfaces that don't route packets for the VLAN... essentially, the command causes the access port to inherit the QoS policy applied to the SVI, and the SVI doesn't count them. This does actually make sense, but it took working through the lab to make my brain process it correctly.
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2010/10/28/links-to-network-world-blog-posts" title="Links to Network World Blog Posts">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2010/12/02/detecting-transparent-proxy-with" title="Detecting a Transparent Proxy with Wireshark/Tshark">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>18 November 2010</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

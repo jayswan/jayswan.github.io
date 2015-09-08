@@ -1,0 +1,16 @@
+---
+layout: post
+title: Unity and Multiple Active Directory Domains
+date: '2008-10-08T08:42:00.000-06:00'
+author: Jay Swan
+tags:
+- permissions wizard
+- Unity
+- active directory
+- multiple domains
+modified_time: '2008-10-08T09:14:52.781-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-8413867957176680440
+blogger_orig_url: http://unroutable.blogspot.com/2008/10/unity-and-multiple-active-directory.html
+---
+
+There seems to be a lack of information out there, even with some TAC engineers, about how to prepare Cisco Unity to import subscribers from Exchange servers in AD domains different from the one in which Unity is installed. I've even had several Cisco engineers tell me that this is unsupported, which is totally false. As far as I know, these are the requirements for Unity with respect to multiple domains:<br /><br /><br />1) All Exchange servers from which you want to import subscribers must be in the same AD <span style="font-weight: bold;">forest</span>. Unity unified messaging does not work across multiple forests. Of course, you can still create voicemail boxes that are totally independent of AD, but that's not the point of unified messaging. Exchange servers in different domains in the same forest is not a problem, as long as the PES (see below) is in the same domain as Unity.<br /><br />2) The Unity server(s) must be installed in the <span style="font-weight: bold;">same </span>Active Directory domain as the <span style="font-weight: bold;">partner Exchange server</span>, or PES. You specify the PES during the Unity install process. It can be changed with the Message Store Integration Wizard. <span style="font-weight: bold;">The PES must have Exchange routing group connectors to all other Exchange servers from which you want to import subscribers.</span> More info on changing the PES is <a href="http://www.cisco.com/en/US/docs/voice_ip_comm/unity/42/upgrade/guide/ex/ru_060.html">here</a>.<br /><br />3) You must run the Permissions Wizard on the Unity server while logged in as an account that can set permissions in all the domains containing Exchange servers from which you want to import subscribers. This might require running the PW multiple times under different accounts. This works fine. You may need to add a domain admin account from another domain to the local admin group on the Unity server. When you run PW from accounts in different domains, it will probably fail on some of the domains. This is because you probably won't have a single account that has all the required permissions in all the domains. You just need to continue running PW under different accounts until it has succeeded in all the domains that have Exchange servers from which you're importing subscribers.

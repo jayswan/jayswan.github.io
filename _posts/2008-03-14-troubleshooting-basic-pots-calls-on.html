@@ -1,0 +1,17 @@
+---
+layout: post
+title: troubleshooting basic POTS calls on a router
+date: '2008-03-14T15:44:00.001-06:00'
+author: Jay Swan
+tags:
+- IOS
+- debug
+- voice
+- router
+- VoIP
+modified_time: '2008-03-14T15:54:04.798-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-7949889310633045626
+blogger_orig_url: http://unroutable.blogspot.com/2008/03/troubleshooting-basic-pots-calls-on.html
+---
+
+We get calls fairly regularly from users at sites with router-based VoIP systems (whether UCM Express or distributed UCM, it doesn't matter) saying that callers to their outside lines are getting ring-no-answer behavior.<br /><br />The first thing I want to do is see if the calls are actually getting to the router. So I access the CLI and do the following:<br /><br />Router#terminal monitor<br />Router#debug vpm signal<br /><br />Then I place a test call to one of their outside lines. If the router just sits there and produces no output, then the problem is almost certainly either in the PSTN, or somebody has unplugged the cable from the FXO port.<br /><br />If the router produces a bunch of barely comprehensible output, then the line is ringing and you've got further troubleshooting to do. Don't forget to turn off debugging when you're done!

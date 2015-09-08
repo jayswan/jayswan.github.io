@@ -1,0 +1,12 @@
+---
+layout: post
+title: Configure Windows IP Addressing from Command Prompt
+date: '2012-03-30T09:13:00.002-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2012-03-30T09:16:44.215-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-8293288667664597173
+blogger_orig_url: http://unroutable.blogspot.com/2012/03/configure-windows-ip-addressing-from.html
+---
+
+For reference, because I have a mental block about remembering this:<br /><span style="font-size: small;"><br /></span><br /><span style="font-size: small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">netsh interface ipv4 set dnsservers "Local Area Connection" static 8.8.8.8 primary</span><br style="font-family: &quot;Courier New&quot;,Courier,monospace;" /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">netsh interface ipv4 set address "Local Area Connection" static 1.1.1.2 255.255.255.0 1.1.1.1</span></span><br /><br /><span style="font-size: small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">netsh interface ipv4 set address "Local Area Connection" source=dhcp</span></span>

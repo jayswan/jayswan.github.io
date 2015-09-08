@@ -1,0 +1,12 @@
+---
+layout: post
+title: DSCP Confusion
+date: '2008-03-14T15:15:00.001-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2008-03-14T15:30:14.756-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-4217032793857788593
+blogger_orig_url: http://unroutable.blogspot.com/2008/03/dscp-confusion.html
+---
+
+A friend of mine asked me a question the other day that pointed out a common area of confusion with the DiffServ model for IP QoS. He was reading some documentation that recommended setting the DSCP value for voice-signaling packets to 26 instead of 24. He was trying to convert those numbers to Assured Forwarding (AF) values, and came up with 31 and 30, respectively. His question was "Why does the documentation appear to be making the QoS treatment of these packets WORSE?"<br /><br />The answer is, it's not. 30 is not a valid AF value. With the Assured Forwarding classes, there are three drop precedence values: 1, 2, and 3. Since zero is not a valid drop precedence, 30 is not a valid AF.<br /><br />The DSCP value of 26 is 001000 in binary. The per-hop-behavior (PHB) value for this is actually not an Assured Forwarding PHB at all, it's a Class Selector value, CS3. The class selector values equate directly to the old IP precedence values, from the days before DiffServ. So DSCP 26 = CS3 = IP precedence 3 = 001000.<br /><br />Clear as mud? Try the <a href="http://en.wikipedia.org/wiki/Differentiated_services">Wikipedia article</a>.

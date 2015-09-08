@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Baby Bro, Part 3: Containers and Loops - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Baby Bro, Part 3: Containers and Loops 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    Bro has four main container types, which I'm going to cover in somewhat nontraditional order:<br /><ul><li>tables</li><li>sets</li><li>vectors</li><li>records </li></ul><span style="font-size: large;">Tables</span><br />A table is a collection of indexed key-value pairs: the same idea is referred to as a dictionary, associative array, or hash table in other languages. Here's a simple example that pairs letters with their place in the alphabet:<br /><br /><!-- HTML generated using hilite.me --><br /><div style="background: #ffffff; background: white; border-width: .1em .1em .1em .8em; border: solid gray; color: black; overflow: auto; padding: .2em .6em; width: auto;"><table><tbody><tr><td><pre style="line-height: 125%; margin: 0;">1<br />2<br />3<br />4<br />5</pre></td><td><pre style="line-height: 125%; margin: 0;"><span style="color: green; font-weight: bold;">event</span> bro_init()<br />    {   <br />    <span style="color: green; font-weight: bold;">local</span> letters <span style="color: #303030;">=</span> <span style="color: #303090; font-weight: bold;">table</span>([<span style="color: #6000e0; font-weight: bold;">1</span>] <span style="color: #303030;">=</span> <span style="background-color: #fff0f0;">"a"</span>, [<span style="color: #6000e0; font-weight: bold;">2</span>] <span style="color: #303030;">=</span> <span style="background-color: #fff0f0;">"b"</span>, [<span style="color: #6000e0; font-weight: bold;">3</span>] <span style="color: #303030;">=</span> <span style="background-color: #fff0f0;">"c"</span>);<br />    <span style="color: green; font-weight: bold;">print</span> letters;<br />    }   <br /></pre></td></tr></tbody></table></div><br />Running it, we get this:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro tables.bro<br />{<br />[3] = c,<br />[1] = a,<br />[2] = b<br />}</span><br /><br />&nbsp;Note that the output isn't in the same order as the script; in Bro, like in most other languages, hash tables are unordered.<br /><br />Iterating over a table with a "for" loop returns the key, again like other languages:<br /><br /><!-- HTML generated using hilite.me --><br /><div style="background: #ffffff; background: white; border-width: .1em .1em .1em .8em; border: solid gray; color: black; overflow: auto; padding: .2em .6em; width: auto;"><table><tbody><tr><td><pre style="line-height: 125%; margin: 0;">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8<br />9</pre></td><td><pre style="line-height: 125%; margin: 0;"><span style="color: green; font-weight: bold;">event</span> bro_init()<br />    {<br />    <span style="color: green; font-weight: bold;">local</span> letters <span style="color: #303030;">=</span> <span style="color: #303090; font-weight: bold;">table</span>([<span style="color: #6000e0; font-weight: bold;">1</span>] <span style="color: #303030;">=</span> <span style="background-color: #fff0f0;">"a"</span>, [<span style="color: #6000e0; font-weight: bold;">2</span>] <span style="color: #303030;">=</span> <span style="background-color: #fff0f0;">"b"</span>, [<span style="color: #6000e0; font-weight: bold;">3</span>] <span style="color: #303030;">=</span> <span style="background-color: #fff0f0;">"c"</span>);<br />    <br />    <span style="color: green; font-weight: bold;">for</span> (key <span style="color: black; font-weight: bold;">in</span> letters)<br />        {<br />        <span style="color: green; font-weight: bold;">print</span> letters[key];<br />        }<br />    }<br /></pre></td></tr></tbody></table></div><br />And the output:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro tables.bro <br />c<br />b<br />a</span><br /><br />Because we printed only the value associated with the key, we never see the key in the output.<br /><br /><span style="font-size: large;">Sets</span><br />It's common in programming to need a data type that allows one to make a collection of distinct objects, without containing multiple instances of identical objects. This is the mathematical notion of a <a href="https://en.wikipedia.org/wiki/Set_%28mathematics%29" target="_blank">set</a>. Bro has a native set type. Consider an example where you have a large list of IP addresses that you got from some other source: an intel feed, a firewall log, a web server log, etc. You want to get a unique set of addresses that have appeared, but you don't care how many times they appeared. This is the perfect use for a set:<br /><br /><!-- HTML generated using hilite.me --><br /><div style="background: #ffffff; background: white; border-width: .1em .1em .1em .8em; border: solid gray; color: black; overflow: auto; padding: .2em .6em; width: auto;"><table><tbody><tr><td><pre style="line-height: 125%; margin: 0;"> 1<br /> 2<br /> 3<br /> 4<br /> 5<br /> 6<br /> 7<br /> 8<br /> 9<br />10<br />11<br />12<br />13</pre></td><td><pre style="line-height: 125%; margin: 0;"><span style="color: green; font-weight: bold;">event</span> bro_init()<br />    {   <br />    <span style="color: green; font-weight: bold;">local</span> a1 <span style="color: #303030;">=</span> <span style="color: #6000e0; font-weight: bold;">1.1.1.1</span>;<br />    <span style="color: green; font-weight: bold;">local</span> a2 <span style="color: #303030;">=</span> <span style="color: #6000e0; font-weight: bold;">2.2.2.2</span>;<br />    <span style="color: green; font-weight: bold;">local</span> a3 <span style="color: #303030;">=</span> <span style="color: #6000e0; font-weight: bold;">3.3.3.3</span>;<br />    <span style="color: green; font-weight: bold;">local</span> a4 <span style="color: #303030;">=</span> [fe80<span style="color: #0e84b5; font-weight: bold;">::</span>abcd<span style="color: #303030;">:</span><span style="color: #6000e0; font-weight: bold;">1</span>];<br />    <span style="color: green; font-weight: bold;">local</span> a5 <span style="color: #303030;">=</span> <span style="color: #6000e0; font-weight: bold;">2.2.2.2</span>;<br />    <span style="color: green; font-weight: bold;">local</span> a6 <span style="color: #303030;">=</span> <span style="color: #6000e0; font-weight: bold;">2.2.2.2</span>;<br /><span style="color: green; font-weight: bold;"><span style="color: black;">    </span>local</span> unique <span style="color: #303030;">=</span> <span style="color: #303090; font-weight: bold;">set</span>(a1,a2,a3,a4,a5,a6);<br />    <span style="color: green; font-weight: bold;">print</span> unique;<br />    }   <br /></pre></td></tr></tbody></table></div><br />And the output:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro sets.bro<br />{<br />1.1.1.1,<br />3.3.3.3,<br />2.2.2.2,<br />fe80::abcd:1<br />}</span><br /><br />Note that 2.2.2.2 appears only once in the set, despite having been included three times as different variables.<br /><br /><span style="font-size: large;">Vectors</span><br />A vector is Bro's version of a one dimensional array. Having spent most of my recent programming time in Python, I was surprised to find that Bro vectors work like hash tables for iteration: when you loop over a vector, you get the index into the vector rather than the object itself. Here's an example:<br /><br /><!-- HTML generated using hilite.me --><br /><div style="background: #ffffff; background: white; border-width: .1em .1em .1em .8em; border: solid gray; color: black; overflow: auto; padding: .2em .6em; width: auto;"><table><tbody><tr><td><pre style="line-height: 125%; margin: 0;">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8</pre></td><td><pre style="line-height: 125%; margin: 0;"><span style="color: green; font-weight: bold;">event</span> bro_init()<br />    {   <br />    <span style="color: green; font-weight: bold;">local</span> animals <span style="color: #303030;">=</span> <span style="color: #303090; font-weight: bold;">vector</span>(<span style="background-color: #fff0f0;">"cat"</span>,<span style="background-color: #fff0f0;">"dog"</span>,<span style="background-color: #fff0f0;">"dinosaur"</span>,<span style="background-color: #fff0f0;">"rat"</span>);<br />    <span style="color: green; font-weight: bold;">for</span> (animal <span style="color: black; font-weight: bold;">in</span> animals)<br />        {   <br />        <span style="color: green; font-weight: bold;">print</span> animal;<br />        }   <br />    }   <br /></pre></td></tr></tbody></table></div><br />The output:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro vectors.bro<br />0<br />1<br />2<br />3</span><br /><br />If you want to iterate a vector and get the object, you have to specify the index:<br /><!-- HTML generated using hilite.me --><br /><div style="background: #ffffff; background: white; border-width: .1em .1em .1em .8em; border: solid gray; color: black; overflow: auto; padding: .2em .6em; width: auto;"><table><tbody><tr><td><pre style="line-height: 125%; margin: 0;">1<br />2<br />3<br />4<br />5<br />6<br />7<br />8</pre></td><td><pre style="line-height: 125%; margin: 0;"><span style="color: green; font-weight: bold;">event</span> bro_init()<br />    {<br />    <span style="color: green; font-weight: bold;">local</span> animals <span style="color: #303030;">=</span> <span style="color: #303090; font-weight: bold;">vector</span>(<span style="background-color: #fff0f0;">"cat"</span>,<span style="background-color: #fff0f0;">"dog"</span>,<span style="background-color: #fff0f0;">"dinosaur"</span>,<span style="background-color: #fff0f0;">"rat"</span>);<br />    <span style="color: green; font-weight: bold;">for</span> (index <span style="color: black; font-weight: bold;">in</span> animals)<br />        {<br />        <span style="color: green; font-weight: bold;">print</span> animals[index];<br />        }<br />    }<br /></pre></td></tr></tbody></table></div><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro vectors.bro<br />cat<br />dog<br />dinosaur<br />rat</span><br /><br />Bro's vectors work pretty much exactly like a table with "counts" as keys (a <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">count</span> is yet another native Bro type that we haven't discussed yet; it's the same as an integer but it's always unsigned; it can't be a negative). In fact, some of the earlier Bro documentation doesn't even show vectors as valid types, so I wonder if they are actually implemented internally as tables.<br /><br /><span style="font-size: large;">Records</span><br />The last Bro container type is the record, which is sort of the meat and potatoes of Bro's wonderful logging tools. Records are discussed in detail in most of the other beginner-Bro material out there, so I'm not going to cover them here.<br /><br />This will probably be the last "Baby Bro" post that I do with just the raw language features demonstrated inside the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">bro_init() </span>event. Any further Bro posts will probably be using Bro in its intended context. Hope this was helpful!
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2013/01/24/cisco-ironport-wsa-with-wccp-and-ip" title="Cisco Ironport WSA with WCCP and IP Spoofing">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2013/03/03/an-operational-reason-for-knowing-trivia" title="An Operational Reason for Knowing Trivia">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>27 January 2013</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

@@ -1,0 +1,12 @@
+---
+layout: post
+title: ADN - Awk Defined Networking
+date: '2015-04-24T10:39:00.000-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2015-04-24T10:42:47.032-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-7845026217769166379
+blogger_orig_url: http://unroutable.blogspot.com/2015/04/adn-awk-defined-networking.html
+---
+
+Because I have yet to transition to a completely software-defined network in which everything configures itself (wink wink), I still have to do tasks like bulk VLAN changes.<br /><br />Thanks to a recent innovation called ADN, or "AWK Defined Networking", I can do this in a shorter time window that the average bathroom break. For example, I just had a request to change all ports on a large access switch stack that&nbsp; are currently in VLAN 76 to VLAN 64:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"># <b>ssh switch_name.foo.com 'show int status | i _76_' | grep Gi | awk '{print "int ",$1,"\n","description PC/Phone","\n","switchport access vlan 64"}'</b><br />Password: ***</span><br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">int&nbsp; Gi1/0/25<br />&nbsp;description PC/Phone<br />&nbsp;switchport access vlan 64<br />int&nbsp; Gi1/0/26<br />&nbsp;description PC/Phone<br />&nbsp;switchport access vlan 64</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">[many more deleted] </span><br /><br />Then I copied and pasted the results into config mode. Back to lounging on the beach.<br /><br /><a href="http://ferd.ca/awk-in-20-minutes.html" target="_blank">Not even any Python skills required!</a>

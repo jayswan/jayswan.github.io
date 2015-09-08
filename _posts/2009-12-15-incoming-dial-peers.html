@@ -1,0 +1,12 @@
+---
+layout: post
+title: incoming dial-peers
+date: '2009-12-15T10:11:00.004-07:00'
+author: Jay Swan
+tags: 
+modified_time: '2009-12-15T14:09:50.720-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-1176179197458489569
+blogger_orig_url: http://unroutable.blogspot.com/2009/12/incoming-dial-peers.html
+---
+
+I had an interesting troubleshooting experience that showed me that I didn't fully understand how incoming dial-peers work with POTS lines.<br /><br />I had a simple H.323 config that hands off a call arriving on an FXO port to CallManager:<br /><br /><span><span><pre><span>voice-port 1/0/2<br />connection plar 7001<br />description POTS line<br />caller-id enable<br /><br />dial-peer voice 7001 voip<br />destination-pattern 700.<br />session target ipv4:10.1.1.100<br />dtmf-relay h245-alphanumeric<br /></span></pre></span></span><br /><br />When a call was placed to the line connected to the FXO port on 1/0/2, the call would be sent to the IP phone with the wrong caller ID.<br /><br />I ran a "debug voip ccapi" and discovered that the incoming dial-peer was not the default dial-peer 0, but another dial-peer (numbers sanitized):<br /><br /><span><span><pre><span>dial-peer voice 1000 pots<br />description 555-1212<br />destination-pattern 1212<br />clid network-number 9705551212<br />port 1/0/2<br /></span></pre></span></span><br /><br />This dial-peer had accidentally been left active from a prior configuration, and its "clid network-number" command was thus overwriting the correct caller ID.<br /><br />I didn't know this previously, but it turns out that an incoming POTS dial peer is matched if it has a "port" statement equal to the inbound voice-port, AND any one of the following three commands is present:<br /><br />incoming called-number<br />answer-address<br />destination-pattern<br /><br />Removing the destination-pattern command or removing the dial-peer entirely corrects the problem and causes dial-peer 0 to be matched inbound.

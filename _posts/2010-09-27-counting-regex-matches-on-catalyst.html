@@ -1,0 +1,12 @@
+---
+layout: post
+title: Counting Regex Matches on Catalyst Switches
+date: '2010-09-27T21:32:00.002-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2010-09-28T07:11:25.279-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-683058814010431885
+blogger_orig_url: http://unroutable.blogspot.com/2010/09/counting-regex-matches-on-catalyst.html
+---
+
+<span style="font-size:85%;"><span style="font-family: arial;">As an old-time Unix/Linux guy, I’ve been wanting the IOS equivalent of the “wc -l” command for oh, about a million years now. Juniper has had this in JunOS for quite some time, via their “count” command. In Unix/Linux shell environments, “wc -l” counts the number of lines in the input. This is very useful for things like counting the number of unused ports on a switch. Until recently, I was stuck with using SSH one-liners to pipe IOS commands through a shell filter, like this:</span><br /><br /><span style="font-family: courier new;">$ ssh 10.1.1.2 'sh int status | i not|disa' | wc -l</span><br /><span style="font-family: courier new;">Password:</span><br /><span style="font-family: courier new;">19</span><br /><br /><span style="font-family: arial;">In English: this executes the command “show interface status | include not|disa” via SSH on the remote device, which returns all the lines that are in either the “notconnected” or “disabled” status. Then it feeds those lines to the “wc -l” command, which counts the lines.</span><br /><br /><span style="font-family: arial;">A couple of months ago, however, I noticed that recent versions of IOS for the Catalyst access switches (3560/3750, and probably the 2960--I haven’t tested the latter) have a “count” filter:</span><br /><br /><span style="font-family: courier new;">Switch#sh int status | count ?</span><br /><span style="font-family: courier new;">LINE Regular Expression</span><br /><br /><span style="font-family: courier new;">Switch#sh int status | count not|disa</span><br /><span style="font-family: courier new;">Number of lines which match regexp = 19</span><br /><br /><span style="font-family: arial;">Anyway, nothing particularly groundbreaking here, just a nice feature that’s long overdue--I hope it gets ported into other IOS images as well.</span><br /></span>

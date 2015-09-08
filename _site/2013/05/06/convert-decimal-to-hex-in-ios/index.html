@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Convert Hex to Decimal in IOS - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Convert Hex to Decimal in IOS 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    Lots of IOS commands produce output in hex that I sometimes want to convert to decimal. Common ones for me are stuff like:<br /><br /><b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">show ip cache flow</span></b><br /><b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">show ip flow top-talkers</span></b><br /><br />and various debug commands. For example:<br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">Router#<b>sh ip cache flow | i Fa1/0.6</b></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">Fa0/1.6&nbsp; 10.5.188.158&nbsp;&nbsp; Tu101*&nbsp; 10.5.24.15&nbsp; 06 0DA7 6D61&nbsp; 345</span><br /><br />I have no idea what the port numbers in columns six and seven are. Fortunately, if the IOS device has the TCL or Bash shells available, we can quickly convert them.<br /><br /><h3><span style="color: blue;">Method 1: Tcl Shell</span></h3>Most routers have the Tcl shell available:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">Router#<b>tclsh </b></span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">Router(tcl)#<b>puts [expr 0xda7]</b><br />3495<br /><br />Router(tcl)#<b>puts [expr 0x6d61]</b><br />28001</span><br /><br />You could write a callable Tcl script to make this permanently available from normal EXEC mode too.<br /><br /><h3><span style="color: blue;">Method 2: Bash Shell</span></h3>The Bash shell came out in one of the early IOS 15.0 versions, so you may or may not have it available. You need to explicitly enable it by entering "shell processing full" in global configuration mode.<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">Router#<b>sh run | i shell</b><br />shell processing full <b><span style="font-family: Times,&quot;Times New Roman&quot;,serif;">&lt; required to enable Bash in IOS 15+<!------></span></b><br />Router#<b>printf "%d" 0xda7</b><br />3495<br />Router#<b>printf "%d" 0x6d61</b><br />28001</span><br /><br /><br />
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2013/04/12/building-ghetto-wan-emulation-network" title="Building a Ghetto WAN Emulation Network">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2013/08/02/understanding-flow-export-terminology" title="Understanding Flow Export Terminology">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>06 May 2013</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

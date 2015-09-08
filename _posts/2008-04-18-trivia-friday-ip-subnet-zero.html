@@ -1,0 +1,16 @@
+---
+layout: post
+title: 'Trivia Friday: ip subnet-zero'
+date: '2008-04-18T13:02:00.000-06:00'
+author: Jay Swan
+tags:
+- IOS
+- IP addressing
+- subnetting
+- IOS trivia
+modified_time: '2008-04-18T13:23:57.526-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-134564361621366322
+blogger_orig_url: http://unroutable.blogspot.com/2008/04/trivia-friday-ip-subnet-zero.html
+---
+
+The <span style="font-weight:bold;">ip subnet-zero</span> command has been largely irrelevant since it became the default in IOS quite some time ago, but it still generates occasional discussion among consumers of IOS trivia.<br /><br />For whatever reason, a lot of people seem to think that setting <span style="font-weight:bold;">no ip subnet-zero</span> causes you to be unable to use either the all-zeros OR all-ones subnets of a classful network. This is not the case. Turning off ip subnet-zero (not that you would want to do this outside of an IOS trivial pursuit game!) only prevents you from assigning the all-zeros subnet of a network:<br /><br /><pre><br />R2(config)#no ip subnet-zero<br />R2(config)#int loopback 0<br />R2(config-if)#ip add 10.0.0.1 255.255.255.192<br />Bad mask /26 for address 10.0.0.1<br />R2(config-if)#ip add 10.255.255.254 255.255.255.192<br />R2(config-if)#ip add 192.168.0.1 255.255.255.192<br />Bad mask /26 for address 192.168.0.1<br />R2(config-if)#ip add 192.168.254.254 255.255.255.192<br />R2(config-if)#<br /></pre><br /><br />Note that we are only prevented from assigning the all-zeros subnet of the network, and there's no restriction on assigning the all-ones subnet.

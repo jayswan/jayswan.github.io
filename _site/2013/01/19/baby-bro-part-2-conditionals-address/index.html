@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Baby Bro, Part 2: Conditionals, Address Types - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Baby Bro, Part 2: Conditionals, Address Types 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    Bro has native types for addresses and networks, making it much easier to work with network data. Today's Baby Bro script shows global variable definition, the use of the address and subnet types, and a simple conditional:<br /><br /><br /><!-- HTML generated using hilite.me --><br /><div style="background: #ffffff; background: white; border-width: .1em .1em .1em .8em; border: solid gray; color: black; overflow: auto; padding: .2em .6em; width: auto;"><table><tbody><tr><td><pre style="line-height: 125%; margin: 0;"> 1<br /> 2<br /> 3<br /> 4<br /> 5<br /> 6<br /> 7<br /> 8<br /> 9<br />10<br />11<br />12<br />13<br />14<br />15<br />16</pre></td><td><pre style="line-height: 125%; margin: 0;"><span style="color: grey;"># declaring global variables</span><br /><span style="color: grey;"># no need to put quotes around addr or subnet variable definitions</span><br /><span style="color: green; font-weight: bold;">global</span> ipv4_host<span style="color: #303030;">:</span><span style="color: #303090; font-weight: bold;">addr</span> <span style="color: #303030;">=</span> <span style="color: #6000e0; font-weight: bold;">1.1.1.1</span>; <br /><span style="color: green; font-weight: bold;">global</span> ipv4_net<span style="color: #303030;">:</span><span style="color: #303090; font-weight: bold;">subnet</span> <span style="color: #303030;">=</span> <span style="color: #6000e0; font-weight: bold;">1.1.0.0</span><span style="background-color: #fff0ff; color: black;">/16;</span><br /><span style="color: green; font-weight: bold;">event</span> bro_init()<br />    {   <br />    <span style="color: green; font-weight: bold;">if</span> (ipv4_host <span style="color: black; font-weight: bold;">in</span> ipv4_net)<br />        {   <br />        <span style="color: grey;"># addr and subnet types are autoconverted to strings with fmt </span><br />        <span style="color: green; font-weight: bold;">print</span> fmt(<span style="background-color: #fff0f0;">"%s is in network %s"</span>,ipv4_host,ipv4_net);<br />        }   <br />    <span style="color: green; font-weight: bold;">else</span><br />        {   <br />        <span style="color: green; font-weight: bold;">print</span> fmt(<span style="background-color: #fff0f0;">"host %s is not in network %s"</span>,ipv4_host,ipv4_net);<br />        }   <br />   }   <br /></pre></td></tr></tbody></table></div><br />Running this from the CLI, we get the expected output:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro addr_net_types.bro <br /><b>1.1.1.1 is in network 1.1.0.0/16</b></span><br /><br />Bro also has several interesting built-in functions for working with network data that we'll explore in upcoming posts. For now, we'll take a look at the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">mask_addr</span> function, which allows you to use Bro as an improvised subnet calculator. You can run a Bro micro-script from the CLI with with&nbsp; the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">-e </span>option, just like the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">-e</span> flag in Perl or the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">-c</span> flag in Python:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro -e "print mask_addr(10.18.32.199,14);"<br /><b>10.16.0.0/14</b><br />jswan@so12a:~/bro$ bro -e "print mask_addr(10.18.32.199,31);"<br /><b>10.18.32.198/31</b></span><br /><br />Great for those late-night subnetting sessions after too many microbrews!<br /><br />Just in case you were wondering: all of this works natively for IPv6, with some changes to the syntax:<br /><br /><b><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@so12a:~/bro$ bro -e "print [fe80::1db9] in [fe80::]/64;"<br />T </span></b><span style="color: blue;"># T is the way Bro outputs "True" in a Boolean test</span><br /><br />We'll look at some more IPv6 stuff in an upcoming post.
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2013/01/15/baby-bro-part-1-functions-etc" title="Baby Bro, Part 1: Functions Etc.">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2013/01/24/cisco-ironport-wsa-with-wccp-and-ip" title="Cisco Ironport WSA with WCCP and IP Spoofing">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>19 January 2013</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

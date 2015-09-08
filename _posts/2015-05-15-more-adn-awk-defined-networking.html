@@ -1,0 +1,12 @@
+---
+layout: post
+title: More ADN (Awk Defined Networking)
+date: '2015-05-15T14:52:00.004-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2015-05-15T14:52:58.041-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-6514957724210212174
+blogger_orig_url: http://unroutable.blogspot.com/2015/05/more-adn-awk-defined-networking.html
+---
+
+Want to know how many IPv4 nodes are in each of your VLANs? Use ADN:<br /><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">ssh myswitch 'sh arp | i Vlan' | awk '{print $NF}' | sort | uniq -c | sort -rn</span></span><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span></span><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: x-small;">&nbsp;&nbsp;&nbsp;&nbsp; 79 Vlan38<br />&nbsp;&nbsp;&nbsp;&nbsp; 65 Vlan42<br />&nbsp;&nbsp;&nbsp;&nbsp; 58 Vlan34<br />&nbsp;&nbsp;&nbsp;&nbsp; 22 Vlan36<br />&nbsp;&nbsp;&nbsp;&nbsp; 21 Vlan32<br />&nbsp;&nbsp;&nbsp;&nbsp; 20 Vlan40<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 9 Vlan3<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 7 Vlan8<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 Vlan6<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 Vlan204<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 Vlan203<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 5 Vlan2<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 4 Vlan74<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 Vlan82<br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 3 Vlan4</span></span>

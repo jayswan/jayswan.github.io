@@ -1,0 +1,14 @@
+---
+layout: post
+title: changing IP address on Unity Express
+date: '2008-04-01T09:17:00.000-06:00'
+author: Jay Swan
+tags:
+- CUE
+- unity express
+modified_time: '2008-04-01T09:18:59.335-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-5824824192566006601
+blogger_orig_url: http://unroutable.blogspot.com/2008/04/changing-ip-address-on-unity-express.html
+---
+
+Apparently you are supposed to shut down CUE before you change the IP address on the service module interface... I didn't, and the CUE module stopped accepting calls until it was reset with the "service module service-engine 0/1 reset" command.

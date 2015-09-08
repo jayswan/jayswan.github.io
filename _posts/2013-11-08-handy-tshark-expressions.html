@@ -1,0 +1,12 @@
+---
+layout: post
+title: Handy Tshark Expressions
+date: '2013-11-08T16:07:00.000-07:00'
+author: Jay Swan
+tags: 
+modified_time: '2013-11-08T16:07:16.141-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-8460186209696154299
+blogger_orig_url: http://unroutable.blogspot.com/2013/11/handy-tshark-expressions.html
+---
+
+Tshark is the CLI version of Wireshark, and it's amazing. I'm going to start collecting some of my favorite tshark one-liners here. Check back often.<br /><br /><b>Find All Unique Filenames Referenced in SMB2 </b><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">tshark -r file.pcap -Tfields -e ip.src -e ip.dst -e text smb2 | grep -oP "GUID handle File: .*?," | sort | uniq | awk -F: '{print $2}' | sed 's/,//'</span><br /><br />Notes:<br />You don't actually need to include the ip.src and ip.dst fields, since they're not extracted by the grep command. I include them in case I want to do an ad-hoc grep for an IP address during the analysis process. Another way to do the same thing would be to modify the display filter to look only for certain addresses, e.g.:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">tshark  -r file.pcap -Tfields -e text smb2 and ip.addr==1.1.1.1 | grep -oP "GUID  handle File: .*?," | sort | uniq | awk -F: '{print $2}' | sed 's/,//'</span>

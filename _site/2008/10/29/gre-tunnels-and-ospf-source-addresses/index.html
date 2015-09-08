@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        GRE tunnels and OSPF adjacencies - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    GRE tunnels and OSPF adjacencies 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    I made the mistake of starting to play with one of Ivan Pepelnjak's <a href="http://blog.ioshints.info/2008/10/ospf-challenge-2-mixing-numbered-and.html">OSPF challenges</a> on his great <a href="http://blog.ioshints.info/">IOS blog</a>, and got carried away playing with GRE tunnels instead.<br /><br />On R1:<br /><br /><span style=";font-family:courier new;font-size:85%;"  >interface Loopback0<br />ip address 10.1.2.1 255.255.255.0<br /><br />interface Serial1/0<br />ip unnumbered Loopback0<br />encapsulation ppp<br /><br />interface Tunnel0<br />ip unnumbered Loopback0<br />ip ospf 1 area 1<br />tunnel source Serial1/0<br />tunnel destination 10.1.2.3<br /></span><br /><br /><br />On R2:<br /><br /><span style=";font-family:courier new;font-size:85%;"  >interface Loopback0<br />ip address 2.2.2.2 255.255.255.0<br /><br />interface Serial1/0<br />ip address 10.1.2.3 255.255.255.248<br />encapsulation ppp<br /><br /><br />interface Tunnel0<br />ip address 22.22.22.22 255.255.255.0<br />ip ospf 1 area 1<br />tunnel source Serial1/0<br />tunnel destination 10.1.2.1</span><br /><br /><br />This configuration forms no adjacency because the GRE tunnel interfaces are on different networks. A debug confirms this:<br /><br /><br /><span style="font-size:85%;"><span style="font-family:courier new;">R2#<span style="font-weight: bold;">deb ip os adj</span></span><br /><span style="font-family:courier new;">OSPF adjacency events debugging is on</span><br /><span style="font-family:courier new;">R2#</span><br /><span style="font-family:courier new;">*Oct 29 09:43:03.123: OSPF: Rcv pkt from 10.1.2.1, Tunnel0, area 0.0.0.1 : src not on the same network</span></span><br /><br />from a <span style="font-weight: bold;">debug ip packet</span> at the same time:<br /><br /><span style="font-size:85%;"><span style="font-family:courier new;">*Oct 29 10:08:11.015: IP: s=22.22.22.22 (Tunnel0), d=224.0.0.5, len 76, rcvd 0</span></span><br /><br />[incidentally, I'm not sure why this behavior doesn't violate section 8.2 of RFC 2328, which states:<br /><br /><pre>  ...the packet's IP source address is required to<br />be on the same network as the receiving interface.  This<br />can be verified by comparing the packet's IP source<br />address to the interface's IP address, after masking<br />both addresses with the interface mask.  <span style="font-weight: bold;">This comparison</span><br /><span style="font-weight: bold;">should not be performed on point-to-point networks.</span> On<br />point-to-point networks, the interface addresses of each<br />end of the link are assigned independently, if they are<br />assigned at all.<br /><br />GRE tunnels are considered point-to-point networks by OSPF.]<br /></pre><br /><br /><br />However, if I remove the explicitly configured IP address on R2's tunnel interface and replace it with an unnumbered configuration, using a loopback that's still not in the same network, it works:<br /><br /><span style="font-size:85%;"><span style="font-family:courier new;">R2(config)#<span style="font-weight: bold;">int tu 0</span></span><br /><span style="font-family:courier new;">R2(config-if)#<span style="font-weight: bold;">ip unn lo 0</span></span><br /><span style="font-family:courier new;">R2(config-if)#^Z</span><br /><span style="font-family:courier new;">R2#</span><br /><span style="font-family:courier new;">*Oct 29 09:44:44.907: %OSPF-5-ADJCHG: Process 1, Nbr 10.0.0.1 on Tunnel0 from LOADING to FULL, Loading Done</span><br /><br /><span style="font-family:courier new;">R2#<span style="font-weight: bold;">sh ip os n</span></span><br /><br /><span style="font-family:courier new;">Neighbor ID     Pri   State           Dead Time   Address         Interface</span><br /><span style="font-family:courier new;">10.0.0.1          0   FULL/  -        00:00:33    10.1.2.1        Tunnel0</span><br /><br /><br /><span style="font-family:courier new;">R1#<span style="font-weight: bold;">sh ip os n</span></span><br /><br /><span style="font-family:courier new;">Neighbor ID     Pri   State           Dead Time   Address         Interface</span><br /><span style="font-family:courier new;">10.1.2.3          0   FULL/  -        00:00:32    2.2.2.2         Tunnel0</span></span><br /><br /><br />At first I thought that maybe the router was changing the source address for OSPF packets to the address of the tunnel source, but that's not the case:<br /><br /><span style="font-size:85%;"><span style="font-family:courier new;">R1#<span style="font-weight: bold;">deb ip packet</span></span><br /><span style="font-family:courier new;">IP packet debugging is on</span><br /><span style="font-family:courier new;">R1#</span><br /><span style="font-family:courier new;">*Oct 29 10:05:44.955: IP: s=10.1.2.1 (local), d=224.0.0.5 (Tunnel0), len 80, sending broad/multicast</span><br /><span style="font-family:courier new;">*Oct 29 10:05:44.955: IP: s=10.1.2.1 (Tunnel0), d=10.1.2.3 (Serial1/0), len 104, sending</span><br /><span style="font-family:courier new;">*Oct 29 10:05:45.703: IP: s=2.2.2.2 (Tunnel0), d=224.0.0.5, len 80, rcvd 0</span></span><br /><br />As you can see, the OSPF hellos are coming from the loopback IP of R2, which is on a completely different network.
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2008/10/17/ip-phones-show-bogus-unknown-status-in" title="IP phones show bogus "unknown" status in UCM">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2008/11/13/in-line-editing-of-cisco-acls" title="in-line editing of Cisco ACLs">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>29 October 2008</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

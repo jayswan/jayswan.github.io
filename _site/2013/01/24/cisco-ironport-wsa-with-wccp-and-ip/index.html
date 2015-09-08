@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Cisco Ironport WSA with WCCP and IP Spoofing - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Cisco Ironport WSA with WCCP and IP Spoofing 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    Recently I had to set up a transparent proxy with the Cisco Ironport Web Security Appliance (WSA) using WCCP on a Catalyst 6500 with a Sup720, with IP spoofing and web cache ACLs enabled. Like with many technologies, this turned out to be pretty simple but I couldn't find it documented all in one place. Perfect blog fodder!<br /><br />The network topology looked like this (simplified, but not by much):<br /><br /><div class="separator" style="clear: both; text-align: center;"><a href="http://4.bp.blogspot.com/-tXjaL8-OKZw/UQGdjvMGIZI/AAAAAAAAACI/bNIh7K4wEXU/s1600/WCCP.png" imageanchor="1" style="margin-left: 1em; margin-right: 1em;"><img border="0" height="212" src="https://lh3.ggpht.com/-tXjaL8-OKZw/UQGdjvMGIZI/AAAAAAAAACI/bNIh7K4wEXU/s1600/WCCP.png" width="400" /></a></div><br /><br />Normally when you set up a transparent proxy with WCCP, the IP address of the proxy server is used as the source of the HTTP requests. The problem in this topology is that I wanted the real source address of the client to appear in the firewall logs. The IP spoofing feature on the WSA allows this to happen, but it requires configuring bidirectional WCCP redirection on the Cat6k. If this had been a Cisco ASA firewall, we could have enabled WCCP there and saved some trouble, but in this case the network was using a firewall from another vendor that didn't support WCCP.<br /><br />One important thing to realize about WCCP on the Catalyst 6500 with the Sup720 is that WCCP egress redirection is done with software switching rather than in hardware, so if you find yourself wanting to use the command "ip wccp redirect out", you're virtually guaranteeing that you're going to redline the CPU on your supervisor. Thus, we want to do only ingress redirection.<br /><br />The 6500 configuration is as follows:<br /><br /><span style="color: blue;"><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">! this ACL prevents web traffic to internal servers (not shown in diagram)</span></span></span><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="color: blue;">! from being inspected </span></span></span><br /><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">ip access-list extended ACL_WCCP<br />&nbsp;deny&nbsp;&nbsp; ip any 10.0.0.0 0.255.255.255<br />&nbsp;deny&nbsp;&nbsp; ip any 192.168.0.0 0.0.255.255<br />&nbsp;permit ip any any</span></span></b><br /><br /><span style="color: blue;"><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">! define the web cache, referencing the ACL above&nbsp;</span></span></span><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="color: blue;">! this<span style="font-size: x-small;"> WCCP service handles only <span style="font-size: x-small;">standard HTTP traffic</span></span></span></span></span><br /><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">ip wccp web-cache redirect-list ACL_WCCP</span></span></b><br /><span style="color: blue;"><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">! a second WCCP service is used for reverse<span style="font-size: x-small;">-path redirection, which</span></span></span></span><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: x-small;"><span style="color: blue;">! is requ<span style="font-size: x-small;">ired for IP spoofing to work</span></span> </span><br /><b>ip wccp 90</b></span></span><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span></span><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">interface Vlan 10</span></span></b><br /><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">&nbsp;description to client networks </span></span></b><br /><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">&nbsp;ip wccp web-cache redirect in</span></span></b><br /><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><br /></span></span></b><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">interface Vlan 30</span></span></b><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><b>&nbsp;description to firewall cluster</b>&nbsp;</span></span><br /><span style="color: blue;"><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">&nbsp;! <span style="font-size: x-small;">WCCP service group 90 is applied inbound on the return path</span></span></span></span><br /><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="color: blue;"><span style="font-size: x-small;">&nbsp;! from the Inter<span style="font-size: x-small;">net so that IP s<span style="font-size: x-small;">poofing will work</span></span></span></span></span></span><br /><b><span style="font-size: x-small;"><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">&nbsp;ip wccp 90 web-cache redirect in</span></span></b><br /><br />If you have multiple layer 3 interfaces going to client networks, you need to enable WCCP on all of them if reverse-path redirection is enabled. If we weren't using reverse redirection (i.e., if we weren't using IP spoofing), this wouldn't be the case: we could simply leave WCCP disabled on interfaces whose traffic shouldn't be proxied. With reverse redirection, though, the return traffic is always sent to the proxy server; if the proxy server sees the return traffic but not the egress traffic, it gets dropped. If you need to use IP spoofing and still have certain types of web traffic bypass the proxy, you would need to do this with ACLs applied to the WCCP service, rather than simply by leaving WCCP disabled on certain interfaces.<br /><br />On the WSA, you create two WCCPv2 services under the Network--&gt;Transparent Redirection menu, one with service group 0 (the default), and one with service group 90 (matching the the IOS configuration above). On group 90, you enable "redirect based on source port". For both groups, you enter the IP address of the SVI as the upstream router address (the IP address of VLAN 20 in this case). The WCCP service on the WSA then registers automatically with the Sup720.<br /><br />Under the Security Services--&gt; Web Proxy Settings menu, you enable transparent mode with IP spoofing for transparent connections only.<br /><br />That's it: now you have a transparent proxy, with IP spoofing so that your firewall logs show accurate client IP addresses. Handling HTTPS traffic or HTTP traffic on non-standard ports is beyond the scope of this post.<br /><br />
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2013/01/19/baby-bro-part-2-conditionals-address" title="Baby Bro, Part 2: Conditionals, Address Types">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2013/01/27/baby-bro-part-3-containers-and-loops" title="Baby Bro, Part 3: Containers and Loops">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>24 January 2013</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

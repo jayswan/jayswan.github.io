@@ -1,0 +1,17 @@
+---
+layout: post
+title: Changes don't take effect in UCM 6
+date: '2008-09-16T09:36:00.001-06:00'
+author: Jay Swan
+tags:
+- ucm
+- callmanager
+- unified communications
+- device
+- pool
+modified_time: '2008-09-16T09:39:01.223-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-475670282407937841
+blogger_orig_url: http://unroutable.blogspot.com/2008/09/changes-dont-take-effect-in-ucm-6.html
+---
+
+If you make a change to a Cisco Unified Communications Manager 6.x system and it doesn't seem to take effect, try restarting the Database Layer Monitor service and the TFTP service. This can be done during production hours.<br /><br />In my case, the change in question was a change to the CallManager Group setting in a device pool.

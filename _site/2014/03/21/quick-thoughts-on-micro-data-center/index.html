@@ -1,0 +1,205 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Quick Thoughts on the Micro Data Center - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Quick Thoughts on the Micro Data Center 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    Here's something that's been on my radar lately: while all the talk in the networking world seems to be about the so-called "massively scalable" data center, almost all of the people I talk to in my world are dealing with the fact that data centers are rapidly getting smaller due to virtualization efficiencies. This seems to be the rule rather than the exception for small-to-medium sized enterprises.<br /><br />In the micro data center that sits down the hall from me, for example, we've gone from 26 physical servers to 18 in the last few months, and we're scheduled to lose several more as older hypervisor hosts get replaced with newer, denser models. I suspect we'll eventually stabilize at around a dozen physical servers hosting in the low hundreds of VMs. We could get much denser, but things like political boundaries inevitably step in to keep the count higher than it might be otherwise. The case is similar in our other main facility.<br /><br />From a networking perspective, this is interesting: I've heard vendor and VAR account managers remark lately that virtualization is cutting into their hardware sales. I'm most familiar with Cisco's offerings, and at least right now they don't seem to be looking at the micro-DC market as a niche: high-port count switches are basically all that are available. Cisco's design guide for the small-to-medium data center starts in the 100-300 10GE port range, which with modern virtualization hosts will support quite a few thousand typical enterprise VMs.<br /><br />Having purchased the bulk of our older-generation servers before 10GE was cheap, we're just getting started with 10GE to the server access layer. Realistically, within a year or so a pair of redundant, reasonably feature-rich 24-32 port 10GE switches will be all we need for server access, probably in 10GBASE-T. Today, my best Cisco option seems to be the Nexus 9300 series, but it still has a lot of ports I'll never use.<br /><br />One thought I've had is to standardize on the Catalyst 4500-X for all DC, campus core, and campus distribution use. With VSS, the topologies are simple. The space, power, and cooling requirements are minimal, and the redundancy is there. It has good layer 3 capabilities, along with excellent SPAN and NetFlow support. The only thing it seems to be lacking today is an upgrade path to 40GE, but that may be acceptable in low-port-density environments. Having one platform to manage would be nice. The drawbacks, of course, are a higher per-port cost and lack of scalability -- but again, scalability isn't really the problem.<br /><br />Comments welcome.
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2014/03/05/packet-capture-in-diverse-tunneled" title="Packet Capture in Diverse / Tunneled Networks?">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2014/04/02/fun-with-router-ip-traffic-export-and" title="Fun with Router IP Traffic Export and NSM">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>21 March 2014</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

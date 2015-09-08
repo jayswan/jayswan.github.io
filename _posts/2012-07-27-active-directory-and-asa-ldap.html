@@ -1,0 +1,12 @@
+---
+layout: post
+title: Active Directory and ASA LDAP Authentication
+date: '2012-07-27T16:32:00.003-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2012-07-27T16:36:53.573-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-351289535778426358
+blogger_orig_url: http://unroutable.blogspot.com/2012/07/active-directory-and-asa-ldap.html
+---
+
+A quick note on using LDAP for multi-domain authentication with Cisco ASA and an Active Directory global catalog server... when using the ASA to match on an LDAP object name, like this:<br /><br /><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: x-small;">ldap attribute-map MY_MAP_NAME</span></div><div style="font-family: &quot;Courier New&quot;,Courier,monospace;"><span style="font-size: x-small;">&nbsp; map-value memberOf "CN=foo,OU=bar,DC=example,DC=com" MY_GROUP_POLICY</span></div><br />...the Active Directory group needs to have certain properties:<br /><br /><ol><li>It must be a security group with universal scope.</li><li>Users in the group must have a primary group different from the group matched by the ASA.</li><li>The user's primary group must have universal scope.</li></ol>I don't know if this still holds true if you have only a single domain and you're using the regular Active Directory LDAP service instead of the global catalog service, but in a multi-domain setup the GCS does not correctly report the "memberOf" attribute unless these conditions are met. This is an Active Directory quirk and thus is not directly related to ASAs, but troubleshooting an ASA issue was how I discovered it.

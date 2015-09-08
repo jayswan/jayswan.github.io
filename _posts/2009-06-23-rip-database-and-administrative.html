@@ -1,0 +1,12 @@
+---
+layout: post
+title: RIP database and administrative distance
+date: '2009-06-23T10:19:00.002-06:00'
+author: Jay Swan
+tags: 
+modified_time: '2009-06-23T10:23:15.305-06:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-8402798683526829771
+blogger_orig_url: http://unroutable.blogspot.com/2009/06/rip-database-and-administrative.html
+---
+
+I was helping a friend study for CCNA the other day and saw a RIP behavior I'd never noticed before. I knew that RIP keeps a local route database that is displayed with the <span style="font-weight: bold; font-family: courier new;">show ip rip database</span> command. If another route to the same prefix with a better administrative distance is preferred in the global routing table, however, the RIP database doesn't show the route. This is different than more sophisticated routing protocols in which a prefix is kept in the protocol-specific topology table even if a route from another protocol with a better AD is in the global routing table.

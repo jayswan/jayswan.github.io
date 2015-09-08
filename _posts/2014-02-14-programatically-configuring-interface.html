@@ -1,0 +1,12 @@
+---
+layout: post
+title: Programmatically Configuring Interface Descriptions from Phone Descriptions
+date: '2014-02-14T15:05:00.003-07:00'
+author: Jay Swan
+tags: 
+modified_time: '2014-02-14T15:06:55.663-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-4935653981481717510
+blogger_orig_url: http://unroutable.blogspot.com/2014/02/programatically-configuring-interface.html
+---
+
+I wrote some Python code that allows you to do the following:<br /><ol><li>Query a Catalyst switch CDP neighbor table from its HTTPS interface,</li><li>Extract the device names of the attached IP phones,</li><li>Query Communications Manager for the IP phone device description,&nbsp;</li><li>Apply the device description as the switch interface description.</li></ol>Obviously, this makes it much easier to see whose phone is attached to a switch port.<br /><br />I hope that this example saves someone the head-banging that I incurred while trying to figure out the AXL XML/SOAP API for Communications Manager.<br /><br />I haven't tested this extensively; all my testing has been on Catalyst 3560 and 3750 switches and CUCM version 8.6. Using the --auto switch to automatically configure the switch is quite slow; this is a limitation of the HTTPS interface rather than the script code. It may be faster to leave that option off and manually copy/paste the printed configuration if you're in a hurry.<br /><br />Note that your switch must be configured to allow configuration via the HTTPS interface; you may need to modify your TACACS/etc. configurations accordingly.<br /><br />All the relevant info is in the <a href="https://github.com/jayswan/cdp_cucm" target="_blank">Github repo</a>.

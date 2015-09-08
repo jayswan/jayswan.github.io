@@ -1,0 +1,12 @@
+---
+layout: post
+title: 'Quick Tip: Improvised File Transfer'
+date: '2013-03-09T07:47:00.001-07:00'
+author: Jay Swan
+tags: 
+modified_time: '2013-03-09T07:50:33.474-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-6322661108145940018
+blogger_orig_url: http://unroutable.blogspot.com/2013/03/quick-tip-improvised-file-transfer.html
+---
+
+The Python module "SimpleHTTPServer" is traditionally a quick and dirty way to test web code without the overhead of installing a full webserver. You can also use it as a quick way to transfer files between systems, if you have Python available:<br /><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">jswan@ubuntu:~$ python -m SimpleHTTPServer 8080</span><br /><span style="font-family: &quot;Courier New&quot;,Courier,monospace;">Serving HTTP on 0.0.0.0 port 8080 ... </span><br /><br />This causes Python to make all the files in the current directory available over HTTP on port 8080. From the client system, you can then use a browser, curl, or wget to transfer the file.<br /><br />No, it's not secure, and yes, it may violate data exfiltration policies (and as an aside, <a href="http://bro.org/" target="_blank">Bro</a> detects this by default). But I've used it fairly often to move files between Windows and Mac or Linux in situations where SCP isn't available and I don't feel like setting up a fileshare.<br /><br />I've also used this in conjunction with the "time" command to test the effects of latency on various network protocols, and as an improvised way to test WAN optimization software.<br /><br /><br />

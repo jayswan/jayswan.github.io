@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>
+      
+        Unity and Multiple Active Directory Domains - 
+      
+      Unroutable
+    </title>
+    
+    <meta name="author" content="Jay Swan">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- HTML5 shim, for IE6-8 support of HTML elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/assets/themes/hooligan/bootstrap/css/bootstrap-responsive.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="/assets/themes/hooligan/css-social-buttons/css/zocial.stripped.css">
+    <link href="/assets/themes/hooligan/css/pygments.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/darkstrap.css" rel="stylesheet" type="text/css" media="all">
+    <link href="/assets/themes/hooligan/css/style.css?body=1" rel="stylesheet" type="text/css" media="all">
+
+    <!-- fav and touch icons -->
+    <!-- Update these with your own images
+      <link rel="shortcut icon" href="images/favicon.ico">
+      <link rel="apple-touch-icon" href="images/apple-touch-icon.png">
+      <link rel="apple-touch-icon" sizes="72x72" href="images/apple-touch-icon-72x72.png">
+      <link rel="apple-touch-icon" sizes="114x114" href="images/apple-touch-icon-114x114.png">
+    -->
+  </head>
+
+  <body>
+    <div id="page-wrap">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <div class="container">
+            <!-- .btn-navbar is used as the toggle for collapsed navbar content -->
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </a>
+
+            <a class="brand" href="/">Unroutable</a>
+
+            <div class="nav-collapse">
+              <ul class="nav">
+                
+                
+                
+
+
+  
+    
+      
+      	
+      	<li><a href="/archive.html">Archive</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/categories.html">Categories</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/pages.html">Pages</a></li>
+      	
+      
+    
+  
+    
+      
+    
+  
+    
+      
+    
+  
+    
+      
+      	
+      	<li><a href="/tags.html">Tags</a></li>
+      	
+      
+    
+  
+
+
+
+              </ul>
+              <ul class="nav pull-right social visible-desktop">
+                <li class="divider-vertical"></li>
+                
+                <li>
+                  <a href="https://github.com/jayswan" class="zocial github icon" target="_blank">
+                    <span class="hidden-desktop">Github</span>
+                  </a>
+                </li>
+                
+                
+                
+                <li>
+                  <a href="https://twitter.com/sanjuanswan" class="zocial twitter icon" target="_blank">
+                    <span class="hidden-desktop">Twitter</span>
+                  </a>
+                </li>
+                
+                
+                
+                
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="content">
+          
+<div class="page-header">
+  <h1>
+    Unity and Multiple Active Directory Domains 
+    
+  </h1>
+</div>
+
+<div class="row">
+  <div class="span8">
+    There seems to be a lack of information out there, even with some TAC engineers, about how to prepare Cisco Unity to import subscribers from Exchange servers in AD domains different from the one in which Unity is installed. I've even had several Cisco engineers tell me that this is unsupported, which is totally false. As far as I know, these are the requirements for Unity with respect to multiple domains:<br /><br /><br />1) All Exchange servers from which you want to import subscribers must be in the same AD <span style="font-weight: bold;">forest</span>. Unity unified messaging does not work across multiple forests. Of course, you can still create voicemail boxes that are totally independent of AD, but that's not the point of unified messaging. Exchange servers in different domains in the same forest is not a problem, as long as the PES (see below) is in the same domain as Unity.<br /><br />2) The Unity server(s) must be installed in the <span style="font-weight: bold;">same </span>Active Directory domain as the <span style="font-weight: bold;">partner Exchange server</span>, or PES. You specify the PES during the Unity install process. It can be changed with the Message Store Integration Wizard. <span style="font-weight: bold;">The PES must have Exchange routing group connectors to all other Exchange servers from which you want to import subscribers.</span> More info on changing the PES is <a href="http://www.cisco.com/en/US/docs/voice_ip_comm/unity/42/upgrade/guide/ex/ru_060.html">here</a>.<br /><br />3) You must run the Permissions Wizard on the Unity server while logged in as an account that can set permissions in all the domains containing Exchange servers from which you want to import subscribers. This might require running the PW multiple times under different accounts. This works fine. You may need to add a domain admin account from another domain to the local admin group on the Unity server. When you run PW from accounts in different domains, it will probably fail on some of the domains. This is because you probably won't have a single account that has all the required permissions in all the domains. You just need to continue running PW under different accounts until it has succeeded in all the domains that have Exchange servers from which you're importing subscribers.
+    <hr>
+    <div class="pagination btn-group">
+      
+        <a class="btn prev" href="/2008/09/16/changes-dont-take-effect-in-ucm-6" title="Changes don't take effect in UCM 6">&larr; Previous</a>
+      
+        <a class="btn" href="/archive.html">Archive</a>
+      
+        <a class="btn next" href="/2008/10/08/blog-post" title="Weird application interactions">Next &rarr;</a>
+      
+    </div>
+    <hr>
+    
+  </div>
+  
+  <div class="span4">
+    <section>
+      <h4>Published</h4>
+      <div class="date"><span>08 October 2008</span></div>
+           
+    </section>
+    
+      <section>
+        <h4>Categories</h4>
+        
+      </section>
+         
+    
+      <section>
+        <h4>Tags</h4>
+        <ul class="tag_box">
+          
+          
+
+
+  
+     
+    	<li><a href="/tags.html#permissions wizard-ref">permissions wizard <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#Unity-ref">Unity <span>2</span></a></li>
+     
+    	<li><a href="/tags.html#active directory-ref">active directory <span>1</span></a></li>
+     
+    	<li><a href="/tags.html#multiple domains-ref">multiple domains <span>1</span></a></li>
+    
+  
+
+
+
+        </ul>
+      </section>
+             
+  </div>
+</div>
+
+
+        </div>
+      </div> <!-- /container -->
+
+      <div class="footer-push"></div>
+    </div><!--/.page-wrap -->
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2015 Jay Swan
+          with help from <a href="http://jekyllbootstrap.com" target="_blank" title="The Definitive Jekyll Blogging Framework">Jekyll Bootstrap</a>
+          and <a href="http://github.com/dhulihan/hooligan" target="_blank">The Hooligan Theme</a>
+        </p>
+      </div>
+    </footer>
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="/assets/themes/hooligan/js/jquery.min.js"><\/script>')</script>
+    <script src="/assets/themes/hooligan/bootstrap/js/bootstrap.min.js"></script>
+
+    
+
+
+
+  </body>
+</html>
+

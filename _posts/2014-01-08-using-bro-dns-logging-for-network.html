@@ -1,0 +1,12 @@
+---
+layout: post
+title: Using Bro DNS Logging for Network Management
+date: '2014-01-08T10:57:00.001-07:00'
+author: Jay Swan
+tags: 
+modified_time: '2014-01-08T10:57:29.781-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-5528026107593094339
+blogger_orig_url: http://unroutable.blogspot.com/2014/01/using-bro-dns-logging-for-network.html
+---
+
+I was recently asked if someone in our desktop support group could get alerted when certain laptops connected to the corporate network. We have a lot of employees who work at industrial locations and rarely connect their machines to our internal networks, so the support group likes to take those rare opportunities to do management tasks that aren't otherwise automated.<br /><br />The two mechanisms that came to mind for alerting on these events are DHCP address assignment, and DNS autoregistration. While we do send DHCP logs to a central archive, the process of alerting on a frequently changing list of hostnames would be somewhat cumbersome. I have been looking for ways to use Bro for network management tasks, so this seemed like a natural use case.<br /><br />We already had Bro instances monitoring DNS traffic for two of our central DNS servers. I don't fully understand how Windows DNS autoregistration works, but from looking at the Bro logs, it appears that the DHCP server sends a DNS SOA query to the central DNS servers containing the hostname of the device to which it assigns a lease.<br /><br />I wanted to learn how to use the input framework in Bro 2.2, so I wrote the following script and loaded it from local.bro:<br /><br /><a href="https://gist.github.com/jayswan/8321141" target="_blank">https://gist.github.com/jayswan/8321141</a><br /><script src="https://gist.github.com/jayswan/8321141.js"></script> <br />This raises a Bro notice whenever one of the hostnames in the hostnames.txt file is seen in a DNS SOA query. I then set up local.bro and broctl to email this notice type to the correct person.<br /><br />This works for now, but I'd love to hear from any more experienced Bro programmers about better ways to do it. 

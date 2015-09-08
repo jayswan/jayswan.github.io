@@ -1,0 +1,12 @@
+---
+layout: post
+title: Filtering .raw fields with Python Elasticsearch DSL High-Level Client
+date: '2015-02-28T20:27:00.001-07:00'
+author: Jay Swan
+tags: 
+modified_time: '2015-02-28T20:32:32.149-07:00'
+blogger_id: tag:blogger.com,1999:blog-5029689981158113588.post-5243688368082643802
+blogger_orig_url: http://unroutable.blogspot.com/2015/02/searching-raw-fields-with-python.html
+---
+
+It took me a while to figure out how to search the <span style="font-family: &quot;Courier New&quot;,Courier,monospace;">not_analyzed</span> ".raw" fields created by Logstash in Elasticsearch indices, using the high-level Python Elasticsearch client. Because keyword arguments can't have attributes, Python throws an error if you try it the intuitive way (this assumes you've already set up a client as <b><i>es</i></b> and an index as <b><i>i</i></b>, as shown in the <a href="http://elasticsearch-dsl.readthedocs.org/en/latest/index.html#" target="_blank">docs</a>):<br /><br /><script src="https://gist.github.com/jayswan/d4ddd71a35bb5f1ad86f.js"></script> Instead, you create a dictionary with your parameters and unpack it using the ** operator:<br /><br /><script src="https://gist.github.com/jayswan/3a7621d909b15c832cfb.js"></script> This produces the Elasticsearch query we want:<br /><br /><script src="https://gist.github.com/jayswan/c04eee5287cc7cbc5ea1.js"></script>
