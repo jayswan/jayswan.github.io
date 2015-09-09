@@ -13,7 +13,6 @@ html, body {
 /* line 18, ../_sass/_base.scss */
 body {
   color: #bbb;
-  text-shadow: 1px 1px 1px #000;
   height: 100%;
   font-family: 'Oxygen', sans-serif;
   font-size: 14px;
