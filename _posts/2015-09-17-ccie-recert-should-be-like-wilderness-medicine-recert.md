@@ -6,7 +6,7 @@ category:
 tags: [ccie,certification]
 ---
 {% include JB/setup %}
-Last winter I had to recertify CCIE. This time it felt like a negative, adversarial ordeal: reviewing and relearning a lot of stuff that I don't use in order to justify the sunk costs of obtaining the certification. It's also a zero-sum game: time spent on recertification is time not spent learning newer, more relevant things. I've seen a couple of blog posts (here and here) lately related to this issue. How could recertification be done better?
+Last winter I had to recertify CCIE. This time it felt like a negative, adversarial ordeal: reviewing and relearning a lot of stuff that I don't use in order to justify the sunk costs of obtaining the certification. It's also a zero-sum game: time spent on recertification is time not spent learning newer, more relevant things. I've seen a couple of blog posts ([here](http://networkingnerd.net/2015/07/28/the-score-is-high-whos-holding-on/) and [here](http://www.fryguy.net/2015/07/07/it-is-time-to-drop-the-ccie-written/)) lately related to this issue. How could recertification be done better?
 
 
 Outside my professional life, I've long been a search and rescue volunteer here in rural Colorado. As part of that, I maintain a Wilderness First Responder (WFR) certification. WFR is a certification for remote emergency medical care that starts as an 80-hour class. It's required for most types of guiding and outdoor education careers.
