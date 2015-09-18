@@ -8,7 +8,7 @@ http://jayswan.github.io/rss.xml
 http://jayswan.github.io/sitemap.txt
 http://jayswan.github.io/tags.html
 
-http://jayswan.github.io/2015/09/06/test-post
+http://jayswan.github.io/2015/09/17/ccie-recert-should-be-like-wilderness-medicine-recert
 http://jayswan.github.io/2015/07/15/installing-netmiko-on-windows
 http://jayswan.github.io/2015/07/14/extracting-traffic-from-rolling-capture
 http://jayswan.github.io/2015/05/15/more-adn-awk-defined-networking

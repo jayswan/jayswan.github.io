@@ -5,6 +5,10 @@ tagline: Very Intermittent Geekery
 ---
 {% include JB/setup %}
 
+##Recent Blog Posts
+{% for post in site.posts limit:3 %}
+* <a href="{{post.url}}">{{post.title}}</a>
+{% endfor %}
 ## About Jay Swan
 
 ###Professional World:
@@ -20,6 +24,4 @@ sometimes lifts moderately heavy things.
 (former) martial arts guy.
 
 ### Historical Notes
-For many years this blog lived (and still does, unmaintained) at http://unroutable.blogspot.com. I got sick of Blogger and enamored of GitHub, so here it lives now. I don't have time to search for problems from the Blogger to GitHub Pages migration, but if you find something that really bothers you, let me know via Twitter.
-
-
+For many years this blog lived (and still does, unmaintained) at http://unroutable.blogspot.com. I got tired of Blogger and enamored of GitHub, so here it lives now. I haven't done a lot of searching for format problems related to the Blogger to GitHub Pages migration, so if you find something that really bothers you, let me know via Twitter.
