@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Unroutable, aka Loopback Mountain
+title: Unroutable
 tagline: Very Intermittent Geekery
 ---
 {% include JB/setup %}
