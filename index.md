@@ -20,8 +20,3 @@ I'm interested in a lot of humanities topics, including philosophy, poetry, scie
 ### Physical World:
 I practice trail running, mountain biking, and weight training fairly seriously, but I'm not great at any of them. In the past I studied a variety of martial arts for a long time.
 
-### Historical Notes
-For many years this blog lived (and still does, unmaintained) at http://unroutable.blogspot.com. I got tired of Blogger and enamored of GitHub, so here it lives now. I haven't done a lot of searching for format problems related to the Blogger to GitHub Pages migration, so if you find something that really bothers you, let me know via Twitter.
-
-#### Disclaimer
-Robert Duncan once wrote something like "all my work is derivative". This is true of me as well, but my employer requires me to say that my ideas don't represent them.
